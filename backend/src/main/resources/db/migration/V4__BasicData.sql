@@ -1,0 +1,66 @@
+INSERT INTO countries (name) VALUES ('USA') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('France') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('Russia') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('United Kingdom') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('Italy') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('India') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('USSR') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('Spain') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('Germany') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('South Korea') ON CONFLICT DO NOTHING;
+INSERT INTO countries (name) VALUES ('Japan') ON CONFLICT DO NOTHING;
+
+INSERT INTO languages (name) VALUES ('English') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Russian') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('French') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Spanish') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Italian') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('German') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Korean') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Japan') ON CONFLICT DO NOTHING;
+INSERT INTO languages (name) VALUES ('Hindi') ON CONFLICT DO NOTHING;
+
+INSERT INTO categories (name) VALUES ('Fantasy') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Sci-Fi') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Action') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Horror') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Thriller') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Adventure') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Musical') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Animation') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Romance') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Crime') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Comedy') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Drama') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Documentary') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Detective') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('Western') ON CONFLICT DO NOTHING;
+INSERT INTO categories (name) VALUES ('War') ON CONFLICT DO NOTHING;
+
+INSERT INTO studios (name) VALUES ('Metro-Goldwyn-Mayer') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Warner Bros.') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Atlas Entertainment') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('CAA Media Finance') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Legendary Pictures') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Castle Rock Entertainment') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('New Line Cinema') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Mosfilm') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Jersey Films') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Miramax Films') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Handmade Films Ltd.') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Syncopy') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Barunson E&A') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('CJ Entertainment') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Buena Vista International') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Studio Ghibli') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Nippon Television Network') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Fox 2000 Pictures') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Lucasfilm') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Columbia Pictures Corporation') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Gaumont') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Village Roadshow Pictures') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('DreamWorks Animation') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Pacific Western') ON CONFLICT DO NOTHING;
+INSERT INTO studios (name) VALUES ('Kemp Company') ON CONFLICT DO NOTHING;
+
+
