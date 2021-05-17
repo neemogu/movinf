@@ -1,0 +1,48 @@
+.review-div-positive {
+    background-color: darkseagreen;
+}
+
+.review-div-negative {
+    background-color: indianred;
+}
+
+.review-div-negative,.review-div-positive {
+    max-width: 500px;
+    border: solid black 1px;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.review-header div {
+    display: inline;
+}
+
+.review-header-postdate {
+    float: right;
+}
+
+.review-header-username {
+    font-size: 17px;
+    color: darkblue;
+}
+
+.review-header {
+    border-bottom: solid black 1px;
+    padding-bottom: 5px;
+}
+
+.review-text {
+    margin: 15px 2px;
+    overflow-wrap: break-word;
+}
+
+.review-footer {
+    border-top: solid black 1px;
+    padding-top: 5px;
+}
+
+.review-rating {
+    text-decoration: underline;
+    text-align: right;
+}

@@ -1,0 +1,85 @@
+.film-list {
+    display: inline-block;
+    width: 100vw;
+}
+
+.film-list-content {
+    margin: 20px;
+}
+
+.film-list-element {
+    background-color: lightskyblue;
+    border: solid lightseagreen 2px;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 15px 15px 20px;
+    max-width: 75vw;
+}
+
+.film-list-element h2 {
+    margin: 0;
+}
+
+.film-list-element-about {
+    margin: 15px 0;
+}
+
+.film-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.film-title a:hover {
+    color: blue;
+}
+
+.film-list-add {
+    margin: 20px;
+}
+
+.film-list-add a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.film-list-add button {
+    border: 2px solid black;
+}
+
+.film-edit {
+    float: right;
+}
+
+.film-edit button {
+    border: 1px solid black;
+}
+
+.film-edit a {
+    text-decoration: none;
+    color: black;
+}
+
+.film-list-filter-toolbar {
+    margin: 20px;
+    border: 1px solid black;
+    padding: 8px;
+    max-width: 80vw;
+}
+
+.film-list-filter-container {
+    display: inline-block;
+    margin: 10px;
+}
+
+.film-list-filter-submit {
+    margin: 10px 5px;
+}
+
+.film-list-filter-submit button {
+    border: 1px solid black;
+}
+
+.film-list-pages {
+    margin: 10px 10px 20px;
+}

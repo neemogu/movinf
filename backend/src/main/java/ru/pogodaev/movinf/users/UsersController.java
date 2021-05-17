@@ -1,9 +1,10 @@
-package ru.pogodaev.movinf.userprofiles;
+package ru.pogodaev.movinf.users;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.pogodaev.movinf.users.User;
+import ru.pogodaev.movinf.users.UserService;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -29,9 +30,9 @@ public class UsersController {
         return service.pageCount(pageSize);
     }
 
-    @GetMapping("/id/{userId}")
-    public ResponseEntity<UserProfile> getSpecificUser(@PathVariable Long userId) {
-        UserProfile foundUser = service.getSpecificUser(userId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getSpecificUser(@PathVariable Long userId) {
+        User foundUser = service.getUserById(userId);
         if (foundUser != null) {
             return ResponseEntity.ok(foundUser);
         } else {
@@ -40,8 +41,8 @@ public class UsersController {
     }
 
     @GetMapping("/name/{username}")
-    public ResponseEntity<UserProfile> getSpecificUser(@PathVariable String username) {
-        UserProfile foundUser = service.getSpecificUser(username);
+    public ResponseEntity<User> getSpecificUser(@PathVariable String username) {
+        User foundUser = service.getUserByUsername(username);
         if (foundUser != null) {
             return ResponseEntity.ok(foundUser);
         } else {
@@ -50,7 +51,7 @@ public class UsersController {
     }
 
     @GetMapping("/genders-list")
-    public Iterable<UserProfile.Gender> getGendersList() {
-        return Arrays.asList(UserProfile.Gender.values());
+    public Iterable<User.Gender> getGendersList() {
+        return Arrays.asList(User.Gender.values());
     }
 }

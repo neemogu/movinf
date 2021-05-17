@@ -1,4 +1,4 @@
-package ru.pogodaev.movinf.common;
+package ru.pogodaev.movinf.countries;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

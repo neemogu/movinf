@@ -1,0 +1,95 @@
+.film-age-rating {
+    color: gray;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.film-title-div .film-age-rating {
+    margin: 0 10px;
+    display: inline;
+}
+
+.film-title {
+    color: black;
+    display: inline;
+}
+
+.film-short-description-div {
+    overflow-wrap: break-word;
+    margin-top: 5px;
+}
+
+.film-short-description {
+    font-size: 16px;
+    font-style: oblique;
+}
+
+.film-actors-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.film-rating-div {
+    font-size: 22px;
+}
+
+.film {
+    padding: 15px;
+}
+
+.film-about-table {
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+}
+
+.film-about-table th {
+    padding-right: 50px;
+    padding-bottom: 5px;
+}
+
+.film-reviews-view-all {
+    margin-top: 15px;
+    font-size: 17px;
+}
+
+.film-actors-list-element {
+    text-align: left;
+    padding: 5px 15px;
+    margin: 5px 0;
+    max-width: 400px;
+    border: solid lightseagreen 1px;
+    background-color: lightskyblue;
+}
+
+.film-full-description {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: solid black 1px;
+    background-color: powderblue;
+}
+
+.film-rating-div {
+    font-weight: bold;
+}
+
+.film-rating-positive,.film-rating-negative {
+    font-size: 30px;
+    text-decoration: underline;
+    margin-right: 6px;
+}
+
+.film-rating-positive {
+    color: forestgreen;
+}
+
+.film-rating-negative {
+    color: indianred;
+}
+
+.film-rating-count {
+    font-weight: normal;
+    color: gray;
+    font-size: 15px;
+}

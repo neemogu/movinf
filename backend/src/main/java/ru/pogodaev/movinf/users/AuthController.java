@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-public class PublicUserController {
+public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
 
     @Autowired
-    public PublicUserController(UserRepository userRepository, PasswordEncoder encoder) {
+    public AuthController(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
     }

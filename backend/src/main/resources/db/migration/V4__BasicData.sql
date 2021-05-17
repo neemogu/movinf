@@ -62,5 +62,3 @@ INSERT INTO studios (name) VALUES ('Village Roadshow Pictures') ON CONFLICT DO N
 INSERT INTO studios (name) VALUES ('DreamWorks Animation') ON CONFLICT DO NOTHING;
 INSERT INTO studios (name) VALUES ('Pacific Western') ON CONFLICT DO NOTHING;
 INSERT INTO studios (name) VALUES ('Kemp Company') ON CONFLICT DO NOTHING;
-
-

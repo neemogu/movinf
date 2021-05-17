@@ -1,36 +1,56 @@
-package ru.pogodaev.movinf.controllers;
+package ru.pogodaev.movinf.studios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.pogodaev.movinf.entities.Film;
-import ru.pogodaev.movinf.entities.Studio;
-import ru.pogodaev.movinf.repositories.StudioRepository;
+import org.springframework.web.bind.annotation.*;
+import ru.pogodaev.movinf.categories.CategoriesList;
+import ru.pogodaev.movinf.categories.Category;
 
-import javax.persistence.Access;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/studios")
 public class StudiosController {
-    private final StudioRepository repository;
+
+    private final StudioService service;
 
     @Autowired
-    public StudiosController(StudioRepository repository) {
-        this.repository = repository;
+    public StudiosController(StudioService service) {
+        this.service = service;
     }
 
     @GetMapping("/{studioId}")
     public ResponseEntity<Studio> studioFilms(@PathVariable Integer studioId) {
-        Optional<Studio> foundStudio = repository.findById(studioId);
-        if (foundStudio.isPresent()) {
-            return ResponseEntity.ok(foundStudio.get());
+        Studio foundStudio = service.specificStudio(studioId);
+        if (foundStudio != null) {
+            return ResponseEntity.ok(foundStudio);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping()
+    public StudiosList studiosList() {
+        return new StudiosList(service.studiosList());
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addStudio(@Valid @RequestBody Studio studio) {
+        service.addOrUpdateStudio(studio);
+        return ResponseEntity.ok("Studio was added");
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateStudio(@Valid @RequestBody Studio studio) {
+        service.addOrUpdateStudio(studio);
+        return ResponseEntity.ok("Studio was updated");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteStudio(@PathVariable("id") Integer id) {
+        service.deleteStudio(id);
+        return new ResponseEntity<>("Studio was deleted", HttpStatus.NO_CONTENT);
     }
 }

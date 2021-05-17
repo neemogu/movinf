@@ -1,9 +1,8 @@
-package ru.pogodaev.movinf.userprofiles;
+package ru.pogodaev.movinf.users;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.pogodaev.movinf.users.User;
 
 import java.util.Optional;
 

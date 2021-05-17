@@ -18,23 +18,17 @@ CREATE TABLE IF NOT EXISTS studios (
     name varchar(100) NOT NULL UNIQUE
 );
 
-
-CREATE TABLE IF NOT EXISTS user_profiles (
-    id bigserial PRIMARY KEY,
-    firstname varchar(20),
-    lastname varchar(30),
-    birthdate date CHECK ( birthdate > '1900-01-01' ),
-    gender int,
-    email varchar(100) NOT NULL UNIQUE,
-    registration_date date NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS users (
     id bigserial PRIMARY KEY,
-    nickname varchar(20) NOT NULL UNIQUE,
+    username varchar(20) NOT NULL UNIQUE,
     password varchar(256) NOT NULL,
-    role int NOT NULL,
-    profile_id bigint REFERENCES user_profiles(id) UNIQUE
+    firstname varchar(20),
+    lastname varchar(30),
+    birthdate date CHECK ( birthdate > '1900-01-01'),
+    gender int,
+    email varchar(100) NOT NULL UNIQUE,
+    registration_date date NOT NULL,
+    role varchar(5) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films (
@@ -45,11 +39,11 @@ CREATE TABLE IF NOT EXISTS films (
     production_date date,
     tagline varchar(200),
     language_id int REFERENCES languages(id),
-    budget bigint CHECK ( budget > 0 ),
-    box_office bigint CHECK ( box_office > 0 ),
-    duration int NOT NULL CHECK ( duration > 0 ),
-    age_rating int,
-    rating real CHECK ( rating >= 1 AND rating <= 10 )
+    budget bigint CHECK (budget > 0),
+    box_office bigint CHECK (box_office > 0),
+    duration int NOT NULL CHECK (duration > 0),
+    age_rating int NOT NULL,
+    rating real CHECK (rating IS NULL OR (rating >= 1 AND rating <= 10))
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
@@ -57,9 +51,10 @@ CREATE TABLE IF NOT EXISTS reviews (
     user_id bigint,
     text varchar(4000),
     rating int NOT NULL CHECK ( rating >= 1 AND rating <= 10 ),
+    post_date date NOT NULL,
     CONSTRAINT review_pk PRIMARY KEY(film_id, user_id),
     CONSTRAINT review_film_fk FOREIGN KEY(film_id) REFERENCES films(id),
-    CONSTRAINT review_user_fk FOREIGN KEY (user_id) REFERENCES user_profiles(id)
+    CONSTRAINT review_user_fk FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS persons (

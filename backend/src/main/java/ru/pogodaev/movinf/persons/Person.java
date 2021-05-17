@@ -1,28 +1,35 @@
-package ru.pogodaev.movinf.entities;
+package ru.pogodaev.movinf.persons;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import ru.pogodaev.movinf.actors.Actor;
+import ru.pogodaev.movinf.countries.Country;
+import ru.pogodaev.movinf.films.Film;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.util.List;
 
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"asActorFilms","asProducerFilms","asScenaristFilms","asDirectorFilms"})
+@ToString(exclude = {"asActorFilms","asProducerFilms","asScenaristFilms","asDirectorFilms"})
 @Table(name = "persons")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
-    @NotNull
-    @Size(min = 1, max = 100, message = "Wrong person firstname length, must be from 1 to 100 characters")
+    private Long id;
+    @NotNull(message = "Enter person's firstname")
+    @Size(min = 1, max = 100, message = "Wrong person's firstname length, must be from 1 to 100 characters")
     @Column(name = "firstname")
     private String firstname;
 
-    @Size(max = 100, message = "Wrong person lastname length, must be up to 100 characters")
+    @Size(max = 100, message = "Wrong person's lastname length, must be up to 100 characters")
     @Column(name = "lastname")
     private String lastname;
 
@@ -31,32 +38,30 @@ public class Person {
 
     @ManyToOne(targetEntity = Country.class)
     @JoinColumn(name = "country_id")
+    @JsonIgnoreProperties(value = {"persons", "films"})
     private Country country;
 
+    @JsonIgnoreProperties(value = {"person"})
     @OneToMany(mappedBy = "person")
     private List<Actor> asActorFilms;
 
-    @ManyToMany(targetEntity = Film.class)
-    @JoinTable(
-            name = "scenarists",
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @ManyToMany(mappedBy = "scenarists")
     private List<Film> asScenaristFilms;
 
-    @ManyToMany(targetEntity = Film.class)
-    @JoinTable(
-            name = "directors",
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @ManyToMany(mappedBy = "directors")
     private List<Film> asDirectorFilms;
 
-    @ManyToMany(targetEntity = Film.class)
-    @JoinTable(
-            name = "producers",
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @ManyToMany(mappedBy = "producers")
     private List<Film> asProducerFilms;
+
+    public void setFromAnother(Person person) {
+        this.id = person.id;
+        this.firstname = person. firstname;
+        this.lastname = person.lastname;
+        this.birthdate = person.birthdate;
+        this.country = person.country;
+    }
 }

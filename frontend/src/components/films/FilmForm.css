@@ -1,0 +1,64 @@
+.film-form {
+    margin: 20px;
+    min-height: 100vh;
+}
+
+.form-text-field  {
+    margin: 7px;
+    display: inline;
+}
+
+.MuiInputBase-root {
+    min-width: 180px;
+}
+
+.MuiInputBase-multiline {
+    width: 800px;
+    min-width: 200px;
+}
+
+.MuiTextField-root {
+    max-width: 200px;
+}
+
+.form-text-field-container {
+    margin: 20px 10px 25px;
+}
+
+.film-form-block h3 {
+    margin-top: 0;
+    margin-left: 10px;
+    margin-bottom: 15px;
+}
+
+.film-form-block {
+    max-width: 600px;
+    padding: 5px 0;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.film-form-block button {
+    display: inline;
+    margin: 0 10px;
+}
+
+.film-form-submit {
+    margin-top: 20px;
+}
+
+.delete-button {
+    border-color: indianred !important;
+    color: indianred !important;
+}
+
+.film-form-submit button {
+    border: 1px solid black;
+    margin: 10px;
+}
+
+.form-property-title {
+    font-size: 18px;
+    margin-right: 20px;
+    letter-spacing: 1px;
+}

@@ -1,10 +1,8 @@
-package ru.pogodaev.movinf.repositories;
+package ru.pogodaev.movinf.films;
 
-import org.hibernate.annotations.SQLUpdate;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.pogodaev.movinf.entities.Film;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import ru.pogodaev.movinf.films.Film;
 
 public interface FilmRepository extends JpaRepository<Film, Long> {
-     Iterable<Film> findAllByTitleContainingIgnoreCase(String s);
 }

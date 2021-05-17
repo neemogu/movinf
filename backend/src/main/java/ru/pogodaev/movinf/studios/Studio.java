@@ -1,6 +1,8 @@
-package ru.pogodaev.movinf.entities;
+package ru.pogodaev.movinf.studios;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import ru.pogodaev.movinf.films.Film;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,12 +16,13 @@ public class Studio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-    @NotNull
+    private Integer id;
+    @NotNull(message = "Enter studio name")
     @Size(min = 1, max = 100, message = "Studio doesn't have a name or it is too long (up to 100 characters)")
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "studios")
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
+    @ManyToMany(mappedBy = "studios", cascade = CascadeType.REMOVE)
     private List<Film> films;
 }

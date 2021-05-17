@@ -1,26 +1,41 @@
-package ru.pogodaev.movinf.entities;
+package ru.pogodaev.movinf.films;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import lombok.ToString;
+import ru.pogodaev.movinf.actors.Actor;
+import ru.pogodaev.movinf.categories.Category;
+import ru.pogodaev.movinf.countries.Country;
+import ru.pogodaev.movinf.languages.Language;
+import ru.pogodaev.movinf.persons.Person;
+import ru.pogodaev.movinf.reviews.Review;
+import ru.pogodaev.movinf.studios.Studio;
 
 import javax.persistence.*;
+import javax.servlet.annotation.MultipartConfig;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"reviews"})
+@ToString(exclude = {"reviews"})
 @Table(name = "films")
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
-    @NotNull
+    private Long id;
+    @NotNull(message = "Enter film title")
     @Size(min = 1, max = 200, message = "Film title length must be from 1 to 200")
     @Column(name = "title")
     private String title;
@@ -36,34 +51,40 @@ public class Film {
     @Column(name = "production_date")
     private Date productionDate;
 
-    @Size(min = 1, max = 100, message = "Film tagline length must be from 1 to 100")
+    @Size(max = 100, message = "Film tagline length must be up to 100")
     @Column(name = "tagline")
     private String tagline;
 
     @ManyToOne(targetEntity = Language.class)
     @JoinColumn(name = "language_id")
+    @JsonIgnoreProperties(value = {"films"})
     private Language language;
 
     @Column(name = "budget")
-    private long budget;
+    @Min(value = 1, message = "Budget must be positive number")
+    private Long budget;
     @Column(name = "box_office")
-    private long boxOffice;
-    @NotNull
+    @Min(value = 1, message = "Box office must be positive number")
+    private Long boxOffice;
+    @NotNull(message = "Enter duration (in minutes)")
     @Column(name = "duration")
-    private int minutesDuration;
+    @Min(value = 1, message = "Duration must be positive (in minutes)")
+    private Integer minutesDuration;
 
+    @NotNull(message = "Enter age rating")
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "age_rating")
     private AgeRating ageRating;
 
-    @Column(name = "rating")
+    @Column(name = "rating", updatable = false, insertable = false)
     private Float rating;
 
     @ManyToMany(targetEntity = Country.class)
     @JoinTable(name = "film_country",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id"))
-    private List<Country> countries;
+    @JsonIgnoreProperties(value = {"films", "persons"})
+    private Set<Country> countries;
 
     @ManyToMany(targetEntity = Studio.class)
     @JoinTable(
@@ -71,7 +92,8 @@ public class Film {
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "studio_id")
     )
-    private List<Studio> studios;
+    @JsonIgnoreProperties(value = {"films"})
+    private Set<Studio> studios;
 
     @ManyToMany(targetEntity = Category.class)
     @JoinTable(
@@ -79,19 +101,55 @@ public class Film {
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories;
+    @JsonIgnoreProperties(value = {"films"})
+    private Set<Category> categories;
 
-    @OneToMany(mappedBy = "film")
+    @OneToMany(mappedBy = "film", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"film"})
+    @Valid
     private List<Actor> actors;
-    @ManyToMany(mappedBy = "asScenaristFilms")
-    private List<Person> scenarists;
-    @ManyToMany(mappedBy = "asDirectorFilms")
-    private List<Person> directors;
-    @ManyToMany(mappedBy = "asProducerFilms")
-    private List<Person> producers;
+
+    @ManyToMany(targetEntity = Person.class)
+    @JoinTable(
+            name = "scenarists",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
+    )
+    @JsonIgnoreProperties(value = {"asActorFilms", "asProducerFilms", "asScenaristFilms", "asDirectorFilms"})
+    private Set<Person> scenarists;
+
+    @ManyToMany(targetEntity = Person.class)
+    @JoinTable(
+            name = "directors",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
+    )
+    @JsonIgnoreProperties(value = {"asActorFilms", "asProducerFilms", "asScenaristFilms", "asDirectorFilms"})
+    private Set<Person> directors;
+
+    @ManyToMany(targetEntity = Person.class)
+    @JoinTable(
+            name = "producers",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
+    )
+    @JsonIgnoreProperties(value = {"asActorFilms", "asProducerFilms", "asScenaristFilms", "asDirectorFilms"})
+    private Set<Person> producers;
 
     @OneToMany(mappedBy = "id.film")
+    @JsonIgnore
     private List<Review> reviews;
+
+    @JsonIgnoreProperties(value = {"film"})
+    @JsonProperty("reviews")
+    public List<Review> lastReviews() {
+        return reviews.subList(0, Math.min(3, reviews.size()));
+    }
+
+    @JsonProperty("reviewsCount")
+    public int reviewsCount() {
+        return reviews.size();
+    }
 
     public enum AgeRating {
         ZERO_PLUS("0+"),
@@ -106,10 +164,26 @@ public class Film {
             this.strValue = strValue;
         }
 
+        public static AgeRating fromStrValue(String value) {
+            switch (value) {
+                case "0+":
+                    return ZERO_PLUS;
+                case "6+":
+                    return SIX_PLUS;
+                case "12+":
+                    return TWELVE_PLUS;
+                case "16+":
+                    return SIXTEEN_PLUS;
+                case "18+":
+                default:
+                    return EIGHTEEN_PLUS;
+            }
+        }
         @JsonValue
         public String getStrValue() {
             return strValue;
         }
     }
+
 
 }

@@ -1,21 +1,21 @@
-package ru.pogodaev.movinf.controllers;
+package ru.pogodaev.movinf.users;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pogodaev.movinf.entities.UserProfile;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class SecuredUserController {
     @GetMapping("/logout")
-    public void logout() {
-
+    public boolean logout() {
+        return true;
     }
 
     @GetMapping("/current")
-    public void currentUser() {
-
+    public User currentUser() {
+        return null;
     }
 }

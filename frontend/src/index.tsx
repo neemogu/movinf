@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import registerServiceWorker from './serviceWorker';
 
 ReactDOM.render(
-    <App />,
+    <App/>,
     document.getElementById('root') as HTMLElement
 );
 //registerServiceWorker();

@@ -1,19 +1,45 @@
-package ru.pogodaev.movinf.common;
+package ru.pogodaev.movinf.countries;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.pogodaev.movinf.persons.Person;
+import ru.pogodaev.movinf.persons.PersonsService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CountryService {
     private final CountryRepository repository;
+    private final PersonsService personsService;
 
-    public CountryService(CountryRepository repository) {
+    @Autowired
+    public CountryService(CountryRepository repository, PersonsService personsService) {
         this.repository = repository;
+        this.personsService = personsService;
     }
 
     public Country getSpecificCountry(int id) {
         Optional<Country> found = repository.findById(id);
         return found.orElse(null);
+    }
+
+    public List<Country> getList() {
+        return repository.findAll(Sort.by("name").ascending());
+    }
+
+    public void addOrUpdateCountry(Country country) {
+        repository.save(country);
+    }
+
+    public void deleteCountry(int id) {
+        repository.findById(id).ifPresent((Country foundCountry) -> {
+            for (Person person : foundCountry.getPersons()) {
+                person.setCountry(null);
+                personsService.addOrUpdatePerson(person);
+            }
+        });
+        repository.deleteById(id);
     }
 }
