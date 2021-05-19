@@ -1,9 +1,13 @@
 import * as React from 'react';
 import {
-    useParams
+    useParams,
+    Link
 } from "react-router-dom";
 import Review from "../reviews/Review"
 import "./Film.css"
+
+import {strOrGap} from "../Utility";
+import {Button} from "@material-ui/core";
 
 interface FilmProps {
     id: string;
@@ -159,16 +163,23 @@ class Film extends React.Component<FilmProps, FilmState> {
                                 <tr className="film-about-table-row">
                                     <th className="film-about-table-name">Language</th>
                                     <th className="film-about-table-values">
-                                        {this.state.data.language !== null ? this.state.data.language.name : "-"}
+                                        {this.state.data.language !== null ? (
+                                            <Link to={"/languages/" + this.state.data.language.id}>
+                                                {this.state.data.language.name}
+                                            </Link>
+                                        ) : "-"}
                                     </th>
                                 </tr>
                                 <tr className="film-about-table-row">
                                     <th className="film-about-table-name">Country</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.countries.length !== 0 ? this.state.data.countries.map((country, idx) =>
-                                                (<span key={country.id}>
-                                            {country.name}{idx === this.state.data.countries.length - 1 ? "" : ", "}
-                                        </span>)
+                                            (
+                                                <span key={country.id}>
+                                                    <Link to={"/countries/" + country.id}>
+                                                        {country.name}{idx === this.state.data.countries.length - 1 ? "" : ", "}
+                                                    </Link>
+                                                </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -176,9 +187,12 @@ class Film extends React.Component<FilmProps, FilmState> {
                                     <th className="film-about-table-name">Category</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.categories.length !== 0 ? this.state.data.categories.map((category, idx) =>
-                                                (<span key={category.id}>
-                                            {category.name}{idx === this.state.data.categories.length - 1 ? "" : ", "}
-                                        </span>)
+                                            (
+                                                <span key={category.id}>
+                                                    <Link to={"/categories/" + category.id}>
+                                                        {category.name}{idx === this.state.data.categories.length - 1 ? "" : ", "}
+                                                    </Link>
+                                                </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -186,9 +200,11 @@ class Film extends React.Component<FilmProps, FilmState> {
                                     <th className="film-about-table-name">Studio</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.studios.length !== 0 ? this.state.data.studios.map((studio, idx) =>
-                                                (<span key={studio.id}>
-                                           {studio.name}{idx === this.state.data.studios.length - 1 ? "" : ", "}
-                                        </span>)
+                                            (<span key={studio.id}>
+                                                <Link to={"/studios/" + studio.id}>
+                                                    {studio.name}{idx === this.state.data.studios.length - 1 ? "" : ", "}
+                                                </Link>
+                                            </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -202,10 +218,12 @@ class Film extends React.Component<FilmProps, FilmState> {
                                     <th className="film-about-table-name">Director</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.directors.length !== 0 ? this.state.data.directors.map((person, idx) =>
-                                                (<span key={person.id}>
-                                            {person.firstname + " " + strOrGap(person.lastname)}
+                                            (<span key={person.id}>
+                                                <Link to={"/persons/" + person.id}>
+                                                    {person.firstname + " " + strOrGap(person.lastname)}
                                                     {idx === this.state.data.directors.length - 1 ? "" : ", "}
-                                        </span>)
+                                                </Link>
+                                            </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -213,10 +231,12 @@ class Film extends React.Component<FilmProps, FilmState> {
                                     <th className="film-about-table-name">Scenarist</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.scenarists.length !== 0 ? this.state.data.scenarists.map((person, idx) =>
-                                                (<span key={person.id}>
-                                            {person.firstname + " " + strOrGap(person.lastname)}
+                                            (<span key={person.id}>
+                                                <Link to={"/persons/" + person.id}>
+                                                    {person.firstname + " " + strOrGap(person.lastname)}
                                                     {idx === this.state.data.scenarists.length - 1 ? "" : ", "}
-                                        </span>)
+                                                </Link>
+                                            </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -224,10 +244,12 @@ class Film extends React.Component<FilmProps, FilmState> {
                                     <th className="film-about-table-name">Producer</th>
                                     <th className="film-about-table-values">
                                         {this.state.data.producers.length !== 0 ? this.state.data.producers.map((person, idx) =>
-                                                (<span key={person.id}>
-                                            {person.firstname + " " + strOrGap(person.lastname)}
+                                            (<span key={person.id}>
+                                                <Link to={"/persons/" + person.id}>
+                                                    {person.firstname + " " + strOrGap(person.lastname)}
                                                     {idx === this.state.data.producers.length - 1 ? "" : ", "}
-                                        </span>)
+                                                </Link>
+                                            </span>)
                                         ) : "-"}
                                     </th>
                                 </tr>
@@ -269,7 +291,9 @@ class Film extends React.Component<FilmProps, FilmState> {
                             <ul className="film-actors-list">
                                 {this.state.data.actors.map((actor, idx) =>
                                     (<li className="film-actors-list-element" key={actor.person.id + " " + actor.role}>
-                                        {actor.person.firstname + " " + strOrGap(actor.person.lastname)} as {actor.role}
+                                        <Link to={"/persons/" + actor.person.id}>
+                                            {actor.person.firstname + " " + strOrGap(actor.person.lastname)}
+                                        </Link> as {actor.role}
                                     </li>))}
                             </ul>
                         </div>
@@ -300,7 +324,11 @@ class Film extends React.Component<FilmProps, FilmState> {
                                      postDate={review.postDate}/>)
                         )}
                         <div className="film-reviews-view-all">
-                            <span>View all...</span>
+                            <Button>
+                                <Link to={"/reviews/film/" + this.props.id}>
+                                    View all...
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -317,14 +345,12 @@ function FilmRouteWrapper() {
 }
 
 export default FilmRouteWrapper;
-export function strOrGap(str: string | null): string {
-    return str !== null ? str : "-";
-}
 export interface FilmPerson {
     id: string,
     firstname: string,
     lastname: string|null
 }
+
 export function getFilmPersonFromJson(person : any) : FilmPerson {
     return {
         id: person.id,

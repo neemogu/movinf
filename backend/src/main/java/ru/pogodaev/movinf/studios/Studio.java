@@ -23,6 +23,6 @@ public class Studio {
     private String name;
 
     @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
-    @ManyToMany(mappedBy = "studios", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "studios")
     private List<Film> films;
 }

@@ -1,12 +1,13 @@
 import React from "react";
 import "./FilmList.css"
 import "./Film.css"
-import {strOrGap} from "./Film"
+import {strOrGap} from "../Utility"
 import {Link} from "react-router-dom";
 import {Button} from "@material-ui/core";
 
 interface FilmListElementProps {
-    filmData: FilmData
+    filmData: FilmData,
+    canEdit: boolean
 }
 
 class FilmListElement extends React.Component<FilmListElementProps> {
@@ -70,13 +71,15 @@ class FilmListElement extends React.Component<FilmListElementProps> {
                             {this.props.filmData.rating !== null ? this.props.filmData.rating.toString().slice(0, 4) : "-"}</span>
                     <span className="film-rating-count">{parseInt(this.props.filmData.reviewsCount) !== 0 ?
                         "(" + this.props.filmData.reviewsCount + " reviews)" : ""}</span>
-                    <span className="film-edit">
-                        <Button size="small">
-                            <Link to={"/films/edit/" + this.props.filmData.id}>
-                                Edit
-                            </Link>
-                        </Button>
-                    </span>
+                    {this.props.canEdit ? (
+                        <span className="film-edit">
+                            <Button size="small">
+                                <Link to={"/films/edit/" + this.props.filmData.id}>
+                                    Edit
+                                </Link>
+                            </Button>
+                        </span>
+                    ) : ""}
                 </div>
             </div>
         );

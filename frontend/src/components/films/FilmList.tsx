@@ -6,7 +6,8 @@ import FilmListElement from "./FilmListElement";
 import {FilmData} from "./FilmListElement"
 
 interface FilmListProps {
-    films: FilmData[]
+    films: FilmData[],
+    canEdit: boolean
 }
 
 
@@ -15,7 +16,7 @@ class FilmList extends React.Component<FilmListProps>{
         return (
             <div className="film-list-content">
                 {this.props.films.map((film) => {
-                    return (<FilmListElement key={film.id} filmData={film}/>)
+                    return (<FilmListElement canEdit={this.props.canEdit} key={film.id} filmData={film}/>)
                 })}
             </div>
         );

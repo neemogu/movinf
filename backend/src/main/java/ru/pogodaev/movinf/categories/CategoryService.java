@@ -33,6 +33,12 @@ public class CategoryService {
     }
 
     public void deleteCategory(int id) {
-        repository.deleteById(id);
+        Category category = categoryById(id);
+        if (category != null) {
+            category.getFilms().forEach(film -> {
+                film.getCategories().remove(category);
+            });
+            repository.delete(category);
+        }
     }
 }

@@ -13,11 +13,9 @@ import java.util.Optional;
 @Service
 public class LanguageService {
     private final LanguageRepository repository;
-    private final FilmService filmService;
 
-    public LanguageService(LanguageRepository repository, FilmService filmService) {
+    public LanguageService(LanguageRepository repository) {
         this.repository = repository;
-        this.filmService = filmService;
     }
 
     public Language getSpecificLanguage(int id) {
@@ -34,12 +32,12 @@ public class LanguageService {
     }
 
     public void deleteLanguage(int id) {
-        repository.findById(id).ifPresent((Language foundLanguage) -> {
-            for (Film film : foundLanguage.getFilms()) {
+        Language language = getSpecificLanguage(id);
+        if (language != null) {
+            for (Film film : language.getFilms()) {
                 film.setLanguage(null);
-                filmService.addOrUpdateFilm(film);
             }
-        });
-        repository.deleteById(id);
+            repository.delete(language);
+        }
     }
 }

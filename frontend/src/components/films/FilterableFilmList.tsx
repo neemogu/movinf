@@ -10,7 +10,11 @@ import {Link} from "react-router-dom"
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 
-interface FilmListProps {}
+import {convertDate} from "../Utility";
+
+interface FilmListProps {
+    canEditOrAdd: boolean
+}
 
 interface FilmListState {
     films: FilmData[],
@@ -47,12 +51,6 @@ interface FilmFilterLists {
     categories: SimpleProperty[],
     countries: SimpleProperty[],
     persons: {id: string, firstname: string, lastname: string}[]
-}
-
-function convertDate(date: Date) {
-    return "" + date.getFullYear() + "-" +
-        (date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)) + "-" +
-        (date.getDay() + 1 >= 10 ? date.getDay() + 1 : "0" + (date.getMonth() + 1));
 }
 
 class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
@@ -254,6 +252,12 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
     };
 
     render() {
+        if (this.state.error) {
+            return (<div>Error occurred, try to refresh a page</div>);
+        }
+        if (!this.state.isLoaded) {
+            return (<div>Loading...</div>);
+        }
         return (
             <div className="film-list">
                 <div className="film-list-filter-toolbar">
@@ -465,7 +469,7 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
                 <div className="film-list-pages">
                     <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
-                <FilmList films={this.state.films}/>
+                <FilmList canEdit={this.props.canEditOrAdd} films={this.state.films}/>
                 <div className="film-list-pages">
                     <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
@@ -474,8 +478,4 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
     }
 }
 
-
-
 export default FilterableFilmList;
-
-

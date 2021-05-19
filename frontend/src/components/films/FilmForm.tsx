@@ -812,7 +812,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                    ))}
                    <Button onClick={this.handleAddScenarist}>Add scenarist</Button>
                </div>
-               <div className="film-form-submit">
+               <div className="form-submit">
                    <Button onClick={this.submitForm}>
                        Submit
                    </Button>

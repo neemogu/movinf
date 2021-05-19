@@ -26,7 +26,7 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "categories", cascade = {CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "categories")
     @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
     private List<Film> films;
 }

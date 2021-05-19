@@ -1,0 +1,33 @@
+.person-name-div {
+    color: black;
+    display: inline;
+}
+
+.person {
+    padding: 15px;
+}
+
+.person-about-table {
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+}
+
+.person-about-table th {
+    padding-right: 50px;
+    padding-bottom: 5px;
+}
+
+.person-about-table a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.person-about-table a:hover {
+    color: blue;
+}
+
+.person-films .film-list-content {
+    margin: 0;
+}
+

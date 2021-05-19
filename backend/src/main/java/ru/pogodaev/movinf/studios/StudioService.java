@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.pogodaev.movinf.categories.Category;
+import ru.pogodaev.movinf.countries.Country;
+import ru.pogodaev.movinf.films.Film;
+import ru.pogodaev.movinf.persons.Person;
 
 import java.util.Optional;
 
@@ -33,6 +36,12 @@ public class StudioService {
     }
 
     public void deleteStudio(int id) {
-        repository.deleteById(id);
+        Studio studio = specificStudio(id);
+        if (studio != null) {
+            studio.getFilms().forEach(film -> {
+                film.getStudios().remove(studio);
+            });
+            repository.delete(studio);
+        }
     }
 }

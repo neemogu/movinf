@@ -1,5 +1,6 @@
 package ru.pogodaev.movinf.persons;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +35,7 @@ public class Person {
     private String lastname;
 
     @Column(name = "birthdate")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date birthdate;
 
     @ManyToOne(targetEntity = Country.class)
@@ -45,15 +47,15 @@ public class Person {
     @OneToMany(mappedBy = "person")
     private List<Actor> asActorFilms;
 
-    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
     @ManyToMany(mappedBy = "scenarists")
     private List<Film> asScenaristFilms;
 
-    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
     @ManyToMany(mappedBy = "directors")
     private List<Film> asDirectorFilms;
 
-    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "categories", "countries"})
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
     @ManyToMany(mappedBy = "producers")
     private List<Film> asProducerFilms;
 

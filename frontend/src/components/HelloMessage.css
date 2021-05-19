@@ -1,7 +1,9 @@
 .hello-message {
-    color: black;
+    color: midnightblue;
     text-align: center;
     height: 100vh;
     width: 100vw;
     display: inline-block;
+    font-size: 80px;
+    letter-spacing: 30px;
 }

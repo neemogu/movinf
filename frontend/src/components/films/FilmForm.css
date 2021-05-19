@@ -43,7 +43,7 @@
     margin: 0 10px;
 }
 
-.film-form-submit {
+.form-submit {
     margin-top: 20px;
 }
 
@@ -52,7 +52,7 @@
     color: indianred !important;
 }
 
-.film-form-submit button {
+.form-submit button {
     border: 1px solid black;
     margin: 10px;
 }

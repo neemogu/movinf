@@ -3,11 +3,13 @@ package ru.pogodaev.movinf.persons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -36,15 +38,31 @@ public class PersonsController {
     }
 
     @GetMapping("/all/{pageNum}")
-    public Iterable<Person> getPagedList(@PathVariable("pageNum") Integer page,
+    public PersonsList getPagedList(@PathVariable("pageNum") Integer page,
                                          @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
-                                         @RequestParam(name = "sortBy", defaultValue = "lastname") String sortBy) {
-        return service.getPagedList(page, pageSize, sortBy);
+                                         @RequestParam(name = "sortBy", defaultValue = "title") String sortBy,
+                                         @RequestParam(name = "sortDirection") Optional<String> sortDir,
+                                         @RequestParam(name = "firstname", defaultValue = "") String firstname,
+                                         @RequestParam(name = "lastname", defaultValue = "") String lastname,
+                                         @RequestParam(name = "birthdateFrom", defaultValue = "1900-01-01")
+                                             @DateTimeFormat(pattern="yyyy-MM-dd") Date birthdateFrom,
+                                         @RequestParam(name = "birthdateTo", defaultValue = "2100-01-01")
+                                             @DateTimeFormat(pattern="yyyy-MM-dd") Date birthdateTo,
+                                         @RequestParam(name = "countryId") Optional<Integer> country) {
+        return new PersonsList(service.getPagedList(page, pageSize, sortBy, sortDir, firstname, lastname,
+                birthdateFrom, birthdateTo, country));
     }
 
     @GetMapping("/all/pages")
-    public Integer pageCount(@RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize) {
-        return service.pageCount(pageSize);
+    public Long pageCount(@RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
+                             @RequestParam(name = "firstname", defaultValue = "") String firstname,
+                             @RequestParam(name = "lastname", defaultValue = "") String lastname,
+                             @RequestParam(name = "birthdateFrom", defaultValue = "1900-01-01")
+                                 @DateTimeFormat(pattern="yyyy-MM-dd") Date birthdateFrom,
+                             @RequestParam(name = "birthdateTo", defaultValue = "2100-01-01")
+                                 @DateTimeFormat(pattern="yyyy-MM-dd") Date birthdateTo,
+                             @RequestParam(name = "countryId") Optional<Integer> country) {
+        return service.pageCount(pageSize, firstname, lastname, birthdateFrom, birthdateTo, country);
     }
 
     @PostMapping

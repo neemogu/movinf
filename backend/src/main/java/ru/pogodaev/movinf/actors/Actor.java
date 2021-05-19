@@ -28,8 +28,7 @@ public class Actor {
 
     @ManyToOne
     @JoinColumn(name = "film_id")
-    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios", "countries",
-            "categories"})
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
     private Film film;
 
     @Size(min = 1, max = 100, message = "Actor must contain a role from 1 to 100 characters length")

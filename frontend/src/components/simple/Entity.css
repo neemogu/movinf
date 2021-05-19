@@ -1,0 +1,16 @@
+.entity-name-div {
+    color: black;
+    display: inline;
+}
+
+.entity {
+    padding: 15px;
+}
+
+.entity-films-persons .film-list-content {
+    margin: 0;
+}
+
+.entity-films-persons .person-list-content {
+    margin: 0;
+}

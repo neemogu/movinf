@@ -32,6 +32,7 @@
 
 .film-rating-div {
     font-size: 22px;
+    font-weight: bold;
 }
 
 .film {
@@ -47,6 +48,15 @@
 .film-about-table th {
     padding-right: 50px;
     padding-bottom: 5px;
+}
+
+.film-about-div a {
+    color: darkblue;
+    text-decoration: none;
+}
+
+.film-about-div a:hover {
+    color: blue;
 }
 
 .film-reviews-view-all {
@@ -70,10 +80,6 @@
     background-color: powderblue;
 }
 
-.film-rating-div {
-    font-weight: bold;
-}
-
 .film-rating-positive,.film-rating-negative {
     font-size: 30px;
     text-decoration: underline;
@@ -92,4 +98,18 @@
     font-weight: normal;
     color: gray;
     font-size: 15px;
+}
+
+.film-reviews-view-all button {
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+.film-reviews-view-all a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.film-reviews-view-all a:hover {
+    color: blue;
 }

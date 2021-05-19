@@ -3,6 +3,7 @@ package ru.pogodaev.movinf.countries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.pogodaev.movinf.categories.Category;
 import ru.pogodaev.movinf.persons.Person;
 import ru.pogodaev.movinf.persons.PersonsService;
 
@@ -34,12 +35,15 @@ public class CountryService {
     }
 
     public void deleteCountry(int id) {
-        repository.findById(id).ifPresent((Country foundCountry) -> {
-            for (Person person : foundCountry.getPersons()) {
+        Country country = getSpecificCountry(id);
+        if (country != null) {
+            for (Person person : country.getPersons()) {
                 person.setCountry(null);
-                personsService.addOrUpdatePerson(person);
             }
-        });
-        repository.deleteById(id);
+            country.getFilms().forEach(film -> {
+                film.getCountries().remove(country);
+            });
+            repository.delete(country);
+        }
     }
 }

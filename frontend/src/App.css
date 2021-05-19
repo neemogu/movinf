@@ -14,6 +14,10 @@
     float: left;
 }
 
+.login-register-nav {
+    float: right !important;
+}
+
 .navigation a {
     display: block;
     color: black;

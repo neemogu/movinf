@@ -3,6 +3,7 @@ package ru.pogodaev.movinf.languages;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.pogodaev.movinf.categories.Category;
 
 import javax.validation.Valid;
 
@@ -24,6 +25,16 @@ public class LanguageController {
     public ResponseEntity<String> addLanguage(@Valid @RequestBody Language language) {
         service.addOrUpdateLanguage(language);
         return ResponseEntity.ok("Language was added");
+    }
+
+    @GetMapping("/{languageId}")
+    public ResponseEntity<Language> languageById(@PathVariable("languageId") Integer id) {
+        Language language = service.getSpecificLanguage(id);
+        if (language != null) {
+            return new ResponseEntity<>(language, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping
