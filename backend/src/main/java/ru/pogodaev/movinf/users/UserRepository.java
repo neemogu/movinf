@@ -1,8 +1,6 @@
 package ru.pogodaev.movinf.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import ru.pogodaev.movinf.users.User;
 
 import java.util.Optional;
 

@@ -2,14 +2,7 @@ package ru.pogodaev.movinf.studios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import ru.pogodaev.movinf.categories.Category;
-import ru.pogodaev.movinf.countries.Country;
-import ru.pogodaev.movinf.films.Film;
-import ru.pogodaev.movinf.persons.Person;
 
 import java.util.Optional;
 

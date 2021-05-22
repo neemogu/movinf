@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
     firstname varchar(20),
     lastname varchar(30),
     birthdate date CHECK ( birthdate > '1900-01-01'),
-    gender int,
+    gender int NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
     registration_date date NOT NULL,
     role varchar(5) NOT NULL

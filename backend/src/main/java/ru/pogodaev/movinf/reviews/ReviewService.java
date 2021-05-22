@@ -1,22 +1,17 @@
 package ru.pogodaev.movinf.reviews;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.pogodaev.movinf.actors.Actor;
-import ru.pogodaev.movinf.categories.Category;
-import ru.pogodaev.movinf.countries.Country;
 import ru.pogodaev.movinf.films.Film;
-import ru.pogodaev.movinf.films.FilmService;
-import ru.pogodaev.movinf.persons.Person;
-import ru.pogodaev.movinf.users.UserService;
 import ru.pogodaev.movinf.users.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;

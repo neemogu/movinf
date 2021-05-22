@@ -1,21 +1,19 @@
 package ru.pogodaev.movinf.persons;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.pogodaev.movinf.actors.Actor;
 import ru.pogodaev.movinf.actors.ActorService;
-import ru.pogodaev.movinf.categories.Category;
-import ru.pogodaev.movinf.countries.Country;
 import ru.pogodaev.movinf.films.Film;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.*;
 
 @Service

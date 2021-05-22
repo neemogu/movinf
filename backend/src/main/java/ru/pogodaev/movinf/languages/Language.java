@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ru.pogodaev.movinf.films.Film;
-import ru.pogodaev.movinf.persons.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

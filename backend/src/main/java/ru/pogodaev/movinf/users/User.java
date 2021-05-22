@@ -2,20 +2,20 @@ package ru.pogodaev.movinf.users;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ru.pogodaev.movinf.films.Film;
 import ru.pogodaev.movinf.reviews.Review;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -77,6 +77,7 @@ public class User {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "gender")
+    @NotNull(message = "Enter your gender")
     private Gender gender;
 
     @NotNull(message = "Enter your email")
@@ -95,7 +96,18 @@ public class User {
     }
 
     @OneToMany(mappedBy = "id.user")
+    @JsonIgnore
     private List<Review> reviews;
+
+    @JsonProperty("reviews")
+    public List<Review> lastReviews() {
+        return reviews.subList(0, Math.min(3, reviews.size()));
+    }
+
+    @JsonProperty("reviewsCount")
+    public int reviewsCount() {
+        return reviews.size();
+    }
 
     public enum UserRole {
         USER("USER"),

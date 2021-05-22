@@ -1,7 +1,10 @@
 package ru.pogodaev.movinf.films;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.pogodaev.movinf.actors.Actor;
 import ru.pogodaev.movinf.categories.Category;
 import ru.pogodaev.movinf.countries.Country;
@@ -11,13 +14,10 @@ import ru.pogodaev.movinf.reviews.Review;
 import ru.pogodaev.movinf.studios.Studio;
 
 import javax.persistence.*;
-import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;

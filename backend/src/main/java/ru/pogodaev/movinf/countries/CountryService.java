@@ -3,7 +3,6 @@ package ru.pogodaev.movinf.countries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.pogodaev.movinf.categories.Category;
 import ru.pogodaev.movinf.persons.Person;
 import ru.pogodaev.movinf.persons.PersonsService;
 
