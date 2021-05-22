@@ -5,7 +5,8 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
 } from "react-router-dom";
 import FilmRouteWrapper from "./components/films/Film";
 import FilterableFilmList from "./components/films/FilterableFilmList";
@@ -16,9 +17,14 @@ import PersonFormRouteWrapper from "./components/persons/PersonForm";
 import EntityRouteWrapper from "./components/simple/Entity";
 import List from "./components/simple/List";
 import FormRouteWrapper from "./components/simple/Form";
+import FilterableReviewListRouteWrapper from "./components/reviews/FilterableReviewList";
+import ReviewFormRouteWrapper from "./components/reviews/ReviewForm";
 
 function App() {
-    const [isLogged, setIsLogged] = useState<boolean>(false);
+    const [isLogged, setIsLogged] = useState<boolean>(true);
+    const [role, setRole] = useState<string>("USER");
+    const [user, setUser] = useState<string>("2");
+    const [authToken, setAuthToken] = useState<string>('');
 
     return (
         <div className="App">
@@ -89,85 +95,146 @@ function App() {
                             <HelloMessage/>
                         </Route>
                         <Route exact path="/films">
-                            <FilterableFilmList canEditOrAdd={true}/>
+                            <FilterableFilmList canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/films/new">
-                            <FilmFormRouteWrapper/>
+                            {role === "ADMIN" ? (
+                                <FilmFormRouteWrapper/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/films/edit/:id">
-                            <FilmFormRouteWrapper/>
+                            {role === "ADMIN" ? (
+                                <FilmFormRouteWrapper/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/films/:id">
-                            <FilmRouteWrapper/>
+                            <FilmRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route exact path="/persons">
-                            <FilterablePersonList canEditOrAdd={true}/>
+                            <FilterablePersonList canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/persons/new">
-                            <PersonFormRouteWrapper/>
+                            {role === "ADMIN" ? (
+                                <PersonFormRouteWrapper/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/persons/edit/:id">
-                            <PersonFormRouteWrapper/>
+                            {role === "ADMIN" ? (
+                                <PersonFormRouteWrapper/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/persons/:id">
-                            <PersonRouteWrapper/>
+                            <PersonRouteWrapper canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route exact path="/countries">
-                            <List link="/countries" canEditOrAdd={true}/>
+                            <List link="/countries" canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/countries/new">
-                            <FormRouteWrapper link="/countries"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/countries"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/countries/edit/:id">
-                            <FormRouteWrapper link="/countries"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/countries"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/countries/:id">
-                            <EntityRouteWrapper link="/countries"/>
+                            <EntityRouteWrapper link="/countries" canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route exact path="/categories">
-                            <List link="/categories" canEditOrAdd={true}/>
+                            <List link="/categories" canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/categories/new">
-                            <FormRouteWrapper link="/categories"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/categories"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/categories/edit/:id">
-                            <FormRouteWrapper link="/categories"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/categories"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/categories/:id">
-                            <EntityRouteWrapper link="/categories"/>
+                            <EntityRouteWrapper link="/categories" canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route exact path="/studios">
-                            <List link="/studios" canEditOrAdd={true}/>
+                            <List link="/studios" canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/studios/new">
-                            <FormRouteWrapper link="/studios"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/studios"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/studios/edit/:id">
-                            <FormRouteWrapper link="/studios"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/studios"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/studios/:id">
-                            <EntityRouteWrapper link="/studios"/>
+                            <EntityRouteWrapper link="/studios" canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route exact path="/languages">
-                            <List link="/languages" canEditOrAdd={true}/>
+                            <List link="/languages" canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/languages/new">
-                            <FormRouteWrapper link="/languages"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/languages"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/languages/edit/:id">
-                            <FormRouteWrapper link="/languages"/>
+                            {role === "ADMIN" ? (
+                                <FormRouteWrapper link="/languages"/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/languages/:id">
-                            <EntityRouteWrapper link="/languages"/>
+                            <EntityRouteWrapper link="/languages" canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route path="/reviews/user/:id">
-
+                            <FilterableReviewListRouteWrapper canEditOrAdd={role === "ADMIN"} known={"user"}
+                                                              currentUserId={user}/>
                         </Route>
                         <Route path="/reviews/film/add/:id">
-
+                            {isLogged ? (
+                                <ReviewFormRouteWrapper currentUserId={user}/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
+                        </Route>
+                        <Route path="/reviews/film/edit/:id">
+                            {isLogged || role === "ADMIN" ? (
+                                <ReviewFormRouteWrapper currentUserId={user}/>
+                            ) : (
+                                <Redirect to="/"/>
+                            )}
                         </Route>
                         <Route path="/reviews/film/:id">
-
+                            <FilterableReviewListRouteWrapper canEditOrAdd={role === "ADMIN"} known={"film"}
+                                                              currentUserId={user}/>
                         </Route>
                         <Route exact path="/users">
                             Users
@@ -175,7 +242,9 @@ function App() {
                         <Route path="/users/:id">
 
                         </Route>
+                        <Route path="/users/current">
 
+                        </Route>
                         <Route path="/login">
                             <PersonFormRouteWrapper/>
                         </Route>

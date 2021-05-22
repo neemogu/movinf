@@ -1,6 +1,7 @@
 package ru.pogodaev.movinf.reviews;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,8 @@ import ru.pogodaev.movinf.reviews.Review;
 import ru.pogodaev.movinf.reviews.ReviewRepository;
 
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reviews")
@@ -38,29 +41,76 @@ public class ReviewController {
         return new ResponseEntity<>("Review was deleted", HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/exist")
+    public Boolean reviewExists(@RequestParam("userId") Long userId,
+                                @RequestParam("filmId") Long filmId) {
+        return service.exist(userId, filmId);
+    }
+
+    @GetMapping("/specific")
+    public ResponseEntity<Review> specificReview(@RequestParam("userId") Long userId,
+                                                 @RequestParam("filmId") Long filmId) {
+        Review review = service.specificReview(userId, filmId);
+        if (review == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(review, HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/film/{filmId}")
-    public Iterable<Review> filmReviews(@PathVariable Long filmId) {
-        return service.filmReviews(filmId);
+    public Iterable<Review> filmReviews(@PathVariable Long filmId,
+                                        @RequestParam(name = "pageNum", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
+                                        @RequestParam(name = "sortBy", defaultValue = "title") String sortBy,
+                                        @RequestParam(name = "sortDirection") Optional<String> sortDir,
+                                        @RequestParam(name = "postDateFrom", defaultValue = "1870-01-01")
+                                            @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateFrom,
+                                        @RequestParam(name = "postDateTo", defaultValue = "2100-01-01")
+                                            @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateTo,
+                                        @RequestParam(name = "ratingFrom", defaultValue = "1") Integer ratingFrom,
+                                        @RequestParam(name = "ratingTo", defaultValue = "10") Integer ratingTo) {
+        return service.filmReviews(filmId, page, pageSize, sortBy, sortDir, ratingFrom, ratingTo, postDateFrom, postDateTo);
     }
 
     @GetMapping("/user/{userId}")
-    public Iterable<Review> userReviews(@PathVariable Long userId) {
-        return service.userReviews(userId);
+    public Iterable<Review> userReviews(@PathVariable Long userId,
+                                        @RequestParam(name = "pageNum", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
+                                        @RequestParam(name = "sortBy", defaultValue = "title") String sortBy,
+                                        @RequestParam(name = "sortDirection") Optional<String> sortDir,
+                                        @RequestParam(name = "postDateFrom", defaultValue = "1870-01-01")
+                                            @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateFrom,
+                                        @RequestParam(name = "postDateTo", defaultValue = "2100-01-01")
+                                            @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateTo,
+                                        @RequestParam(name = "ratingFrom", defaultValue = "1") Integer ratingFrom,
+                                        @RequestParam(name = "ratingTo", defaultValue = "10") Integer ratingTo) {
+        return service.userReviews(userId, page, pageSize, sortBy, sortDir, ratingFrom, ratingTo, postDateFrom, postDateTo);
     }
 
-    @GetMapping("/film/{filmId}/negative")
-    public Iterable<Review> negativeFilmReviews(@PathVariable Long filmId) {
-        return service.negativeFilmReviews(filmId);
+
+
+    @GetMapping("/user/{userId}/pages")
+    public Long userReviewsPages(@PathVariable Long userId,
+                                 @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
+                                 @RequestParam(name = "postDateFrom", defaultValue = "1870-01-01")
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateFrom,
+                                 @RequestParam(name = "postDateTo", defaultValue = "2100-01-01")
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateTo,
+                                 @RequestParam(name = "ratingFrom", defaultValue = "1") Integer ratingFrom,
+                                 @RequestParam(name = "ratingTo", defaultValue = "10") Integer ratingTo) {
+        return service.userReviewsPages(userId, pageSize, ratingFrom, ratingTo, postDateFrom, postDateTo);
     }
 
-    @GetMapping("/film/{filmId}/positive")
-    public Iterable<Review> positiveFilmReviews(@PathVariable Long filmId) {
-        return service.positiveFilmReviews(filmId);
-    }
-
-    @GetMapping("/film/{filmId}/rating/{rating}")
-    public Iterable<Review> specificRatingFilmReviews(@PathVariable Long filmId,
-                                                      @PathVariable Integer rating) {
-        return service.specificRatingFilmReviews(filmId, rating);
+    @GetMapping("/film/{filmId}/pages")
+    public Long filmReviewsPages(@PathVariable Long filmId,
+                                 @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
+                                 @RequestParam(name = "postDateFrom", defaultValue = "1870-01-01")
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateFrom,
+                                 @RequestParam(name = "postDateTo", defaultValue = "2100-01-01")
+                                     @DateTimeFormat(pattern="yyyy-MM-dd") Date postDateTo,
+                                 @RequestParam(name = "ratingFrom", defaultValue = "1") Integer ratingFrom,
+                                 @RequestParam(name = "ratingTo", defaultValue = "10") Integer ratingTo) {
+        return service.filmReviewsPages(filmId, pageSize, ratingFrom, ratingTo, postDateFrom, postDateTo);
     }
 }

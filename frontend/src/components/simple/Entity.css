@@ -3,8 +3,13 @@
     display: inline;
 }
 
+.entity-name {
+    margin: 0 0 30px;
+    letter-spacing: 2px;
+}
+
 .entity {
-    padding: 15px;
+    padding: 30px;
 }
 
 .entity-films-persons .film-list-content {

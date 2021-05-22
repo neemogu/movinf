@@ -24,7 +24,28 @@
 
 .review-header-username {
     font-size: 17px;
+}
+
+.review-header-username a {
+    text-decoration: none;
     color: darkblue;
+}
+
+.review-header-username a:hover {
+    color: blue;
+}
+
+.review-header-film {
+    font-size: 17px;
+}
+
+.review-header-film a {
+    text-decoration: none;
+    color: darkblue;
+}
+
+.review-header-film a:hover {
+    color: blue;
 }
 
 .review-header {
@@ -40,9 +61,25 @@
 .review-footer {
     border-top: solid black 1px;
     padding-top: 5px;
+    min-height: 30px;
 }
 
 .review-rating {
     text-decoration: underline;
     text-align: right;
+    display: inline-block;
+    float: right;
+}
+
+.review-edit {
+    display: inline-block;
+}
+
+.review-edit button {
+    border: 1px solid black;
+}
+
+.review-edit a {
+    text-decoration: none;
+    color: black;
 }

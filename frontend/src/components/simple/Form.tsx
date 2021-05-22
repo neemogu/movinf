@@ -4,6 +4,7 @@ import {
 } from "@material-ui/core";
 
 import "../films/FilmForm.css"
+import {backLink} from "../Utility";
 
 import {
     useParams,
@@ -55,7 +56,7 @@ class Form extends React.Component<FormProps, FormState>{
 
     componentDidMount() {
         if (this.state.data.id !== null) {
-            fetch("http://localhost:8080" + this.props.link)
+            fetch(backLink + this.props.link)
                 .then(response => response.json())
                 .then(data => {
                     let entity = findInList(this.state.data.id, data.list);
@@ -87,7 +88,7 @@ class Form extends React.Component<FormProps, FormState>{
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(this.state.data)
         };
-        fetch('http://localhost:8080' + this.props.link, requestOptions)
+        fetch(backLink + this.props.link, requestOptions)
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
@@ -105,7 +106,7 @@ class Form extends React.Component<FormProps, FormState>{
         const requestOptions = {
             method: 'DELETE'
         };
-        fetch('http://localhost:8080' + this.props.link + "/" + this.state.data.id, requestOptions)
+        fetch(backLink + this.props.link + "/" + this.state.data.id, requestOptions)
             .then(response => response.json());
         this.setState({redirect: true});
     }
@@ -120,7 +121,7 @@ class Form extends React.Component<FormProps, FormState>{
             return <Redirect to={this.props.link}/>
         }
         if (!this.state.isLoaded) {
-            return (<h1>Loading</h1>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <form className="film-form">

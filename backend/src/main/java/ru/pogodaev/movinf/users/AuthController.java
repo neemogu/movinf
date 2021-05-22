@@ -3,6 +3,7 @@ package ru.pogodaev.movinf.users;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,5 +37,11 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestParam("username") final String username,
                         @RequestParam("password") final String password) {
         return null;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(
+            DataIntegrityViolationException exception) {
+        return new ResponseEntity<>("Username or email is already exist", HttpStatus.CONFLICT);
     }
 }

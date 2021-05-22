@@ -4,6 +4,8 @@ import {Button} from "@material-ui/core";
 import {Link} from "react-router-dom"
 import ListElement from "./ListElement";
 
+import {backLink} from "../Utility";
+
 interface ListProps {
     canEditOrAdd: boolean,
     link: string
@@ -26,7 +28,7 @@ class List extends React.Component<ListProps, ListState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080" + this.props.link)
+        fetch(backLink + this.props.link)
             .then(response => response.json())
             .then(data => this.setState({
                 entities: data.list,
@@ -46,17 +48,19 @@ class List extends React.Component<ListProps, ListState>{
             return (<div>Error occurred, try to refresh a page</div>);
         }
         if (!this.state.isLoaded) {
-            return (<div>Loading...</div>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <div className="entity-list">
-                <div className="entity-list-add">
-                    <Button>
-                        <Link to={this.props.link + "/new"}>
-                            Add new
-                        </Link>
-                    </Button>
-                </div>
+                {this.props.canEditOrAdd ? (
+                    <div className="entity-list-add">
+                        <Button>
+                            <Link to={this.props.link + "/new"}>
+                                Add new
+                            </Link>
+                        </Button>
+                    </div>
+                ) : ""}
                 <div className="entity-list-content">
                     {this.state.entities.map((entity) => {
                         return (<ListElement canEdit={this.props.canEditOrAdd} key={entity.id} id={entity.id}

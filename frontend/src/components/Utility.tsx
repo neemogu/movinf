@@ -7,3 +7,5 @@ export function convertDate(date: Date) {
 export function strOrGap(str: string | null): string {
     return str !== null ? str : "-";
 }
+
+export const backLink = 'http://localhost:8080';

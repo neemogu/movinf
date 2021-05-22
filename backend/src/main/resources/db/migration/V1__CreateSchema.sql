@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS films (
 CREATE TABLE IF NOT EXISTS reviews (
     film_id bigint,
     user_id bigint,
-    text varchar(4000),
+    text varchar(1000),
     rating int NOT NULL CHECK ( rating >= 1 AND rating <= 10 ),
     post_date date NOT NULL,
     CONSTRAINT review_pk PRIMARY KEY(film_id, user_id),

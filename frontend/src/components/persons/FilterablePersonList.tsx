@@ -10,6 +10,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import PersonList from "./PersonList";
 import {convertDate} from "../Utility";
+import {backLink} from "../Utility";
 
 interface PersonListProps {
     canEditOrAdd: boolean
@@ -20,6 +21,7 @@ interface PersonListState {
     filters: PersonFilters,
     lists: PersonFilterLists,
     pagesTotal: number,
+    currentPage: number,
     error: any,
     isLoaded: boolean
 }
@@ -65,6 +67,7 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
                 countries: []
             },
             pagesTotal: 0,
+            currentPage: 1,
             error: null,
             isLoaded: false
         };
@@ -93,7 +96,7 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
 
     changePage(event: object, page: number) {
         const params = this.getUrlParams();
-        fetch("http://localhost:8080/persons/all/" + (page - 1).toString() + "?" + params)
+        fetch(backLink + "/persons/all/" + (page - 1).toString() + "?" + params)
             .then(response => response.json())
             .then(data => this.setState({
                 persons: data.list.map(function (person: any) {
@@ -105,7 +108,8 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
                         country: person.country,
                     }
                 }),
-                isLoaded: true
+                isLoaded: true,
+                currentPage: page
             }), error => {
                 this.setState({
                     error: error,
@@ -116,7 +120,7 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
 
     updateList(event: any) {
         const params = this.getUrlParams();
-        fetch("http://localhost:8080/persons/all/pages?" + params)
+        fetch(backLink + "/persons/all/pages?" + params)
             .then(response => response.text())
             .then(data => this.setState({pagesTotal: parseInt(data)}), error => {
                 this.setState({
@@ -128,7 +132,7 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/countries")
+        fetch( backLink + "/countries")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                     ...this.state.lists,
@@ -170,7 +174,7 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
             return (<div>Error occurred, try to refresh a page</div>);
         }
         if (!this.state.isLoaded) {
-            return (<div>Loading...</div>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <div className="person-list">
@@ -280,19 +284,23 @@ class FilterablePersonList extends React.Component<PersonListProps, PersonListSt
                         </Button>
                     </div>
                 </div>
-                <div className="person-list-add">
-                    <Button>
-                        <Link to="/persons/new">
-                            Add new person
-                        </Link>
-                    </Button>
-                </div>
+                {this.props.canEditOrAdd ? (
+                    <div className="person-list-add">
+                        <Button>
+                            <Link to="/persons/new">
+                                Add new person
+                            </Link>
+                        </Button>
+                    </div>
+                ) : ""}
                 <div className="person-list-pages">
-                    <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
+                    <Pagination page={this.state.currentPage} defaultPage={1} boundaryCount={3}
+                                count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
                 <PersonList canEdit={this.props.canEditOrAdd} persons={this.state.persons}/>
                 <div className="person-list-pages">
-                    <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
+                    <Pagination page={this.state.currentPage} defaultPage={1} boundaryCount={3}
+                                count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
             </div>
         );

@@ -1,17 +1,20 @@
 import React from "react";
 import {
+    Link,
     useParams
 } from "react-router-dom"
 
 import {FilmData} from "../films/FilmListElement";
 import {strOrGap} from "../Utility";
 import "./Person.css";
-import {AppBar, Tab} from "@material-ui/core";
+import {AppBar, Button, Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import FilmList from "../films/FilmList";
+import {backLink} from "../Utility";
 
 interface PersonProps {
-    id: string;
+    id: string,
+    canEdit: boolean
 }
 
 interface PersonData {
@@ -73,7 +76,7 @@ class Person extends React.Component<PersonProps, PersonState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/persons/" + this.props.id)
+        fetch(backLink + "/persons/" + this.props.id)
             .then(response => response.json())
             .then(received => this.setState({
                 data: {
@@ -98,9 +101,24 @@ class Person extends React.Component<PersonProps, PersonState>{
     }
 
     render() {
+        if (this.state.error) {
+            return (<div>Error occurred, try to refresh a page</div>);
+        }
+        if (!this.state.isLoaded) {
+            return (<h1 className="loading">Loading...</h1>);
+        }
         return (
             <div className="person">
                 <div className="person-name-div">
+                    {this.props.canEdit ? (
+                        <span className="person-edit">
+                            <Button size="small">
+                                <Link to={"/persons/edit/" + this.props.id}>
+                                    Edit
+                                </Link>
+                            </Button>
+                        </span>
+                    ) : ""}
                     <h1 className="person-name">
                         {this.state.data.firstname + " " +
                         (this.state.data.lastname !== null ? this.state.data.lastname : "")}
@@ -155,10 +173,10 @@ class Person extends React.Component<PersonProps, PersonState>{
     }
 }
 
-function PersonRouteWrapper() {
+function PersonRouteWrapper(props: {canEdit: boolean}) {
     let {id} = useParams();
     return (
-        <Person id={id}/>
+        <Person canEdit={props.canEdit} id={id}/>
     );
 }
 

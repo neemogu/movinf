@@ -1,10 +1,7 @@
 package ru.pogodaev.movinf.films;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.pogodaev.movinf.actors.Actor;
 import ru.pogodaev.movinf.categories.Category;
 import ru.pogodaev.movinf.countries.Country;
@@ -30,6 +27,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"reviews"})
 @ToString(exclude = {"reviews"})
 @Table(name = "films")
+@NoArgsConstructor
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -140,7 +138,6 @@ public class Film {
     @JsonIgnore
     private List<Review> reviews;
 
-    @JsonIgnoreProperties(value = {"film"})
     @JsonProperty("reviews")
     public List<Review> lastReviews() {
         return reviews.subList(0, Math.min(3, reviews.size()));

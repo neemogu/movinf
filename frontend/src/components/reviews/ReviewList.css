@@ -1,0 +1,76 @@
+.review-list {
+    display: inline-block;
+    width: 100vw;
+}
+
+.review-list-content {
+    margin: 20px;
+}
+
+.review-list-title-div {
+    margin: 25px;
+}
+
+.review-list-element {
+    background-color: lightskyblue;
+    border: solid lightseagreen 2px;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 15px 15px 20px;
+    max-width: 70vw;
+}
+
+.review-list-element h1 {
+    margin: 0;
+}
+
+.review-list-element-about {
+    margin: 15px 0;
+}
+
+.review-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.review-title a:hover {
+    color: blue;
+}
+
+.review-list-add {
+    margin: 20px;
+}
+
+.review-list-add a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.review-list-add button {
+    border: 2px solid black;
+}
+
+.review-list-filter-toolbar {
+    margin: 20px;
+    border: 1px solid black;
+    padding: 8px;
+    max-width: 80vw;
+}
+
+.review-list-filter-container {
+    display: inline-block;
+    margin: 10px;
+}
+
+.review-list-filter-submit {
+    margin: 10px 5px;
+}
+
+.review-list-filter-submit button {
+    border: 1px solid black;
+}
+
+.review-list-pages {
+    margin: 10px 10px 20px;
+}

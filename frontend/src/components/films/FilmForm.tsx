@@ -7,6 +7,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/picker
 
 import {FilmPerson, getFilmPersonFromJson} from "./Film";
 import "./FilmForm.css";
+import {backLink} from "../Utility";
 
 import {
     useParams,
@@ -171,26 +172,26 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/persons")
+        fetch(backLink + "/persons")
             .then(response => response.json())
             .then(data => this.setState({persons: data.list}))
-        fetch("http://localhost:8080/categories")
+        fetch(backLink + "/categories")
             .then(response => response.json())
             .then(data => this.setState({categories: data.list}))
-        fetch("http://localhost:8080/studios")
+        fetch(backLink + "/studios")
             .then(response => response.json())
             .then(data => this.setState({studios: data.list}))
-        fetch("http://localhost:8080/countries")
+        fetch(backLink + "/countries")
             .then(response => response.json())
             .then(data => this.setState({countries: data.list}))
-        fetch("http://localhost:8080/languages")
+        fetch(backLink + "/languages")
             .then(response => response.json())
             .then(data => this.setState({languages: data.list}))
-        fetch("http://localhost:8080/films/age-ratings")
+        fetch(backLink + "/films/age-ratings")
             .then(response => response.json())
             .then(data => this.setState({ageRatings: data}))
         if (this.state.film.id !== null) {
-            fetch("http://localhost:8080/films/" + this.state.film.id)
+            fetch(backLink + "/films/" + this.state.film.id)
                 .then(response => response.json())
                 .then(data => this.setState({film: {
                         id: data.id,
@@ -230,7 +231,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(preparedFilm)
         };
-        fetch('http://localhost:8080/films', requestOptions)
+        fetch(backLink + '/films', requestOptions)
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
@@ -249,7 +250,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
         const requestOptions = {
             method: 'DELETE'
         };
-        fetch('http://localhost:8080/films/' + this.state.film.id, requestOptions)
+        fetch(backLink + '/films/' + this.state.film.id, requestOptions)
             .then(response => response.json());
         this.setState({redirect: true});
     }
@@ -424,7 +425,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
             return <Redirect to="/films"/>
         }
         if (!this.state.isLoaded) {
-            return (<h1>Loading</h1>);
+            return (<h1 className="loading">Loading</h1>);
         }
         return (
            <form className="film-form">

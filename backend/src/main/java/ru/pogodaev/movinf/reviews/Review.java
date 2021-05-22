@@ -23,10 +23,11 @@ import java.util.Date;
 public class Review {
     @EmbeddedId
     @JsonIgnore
-    private ReviewId id;
+    private ReviewId id = new ReviewId();
 
     @JsonProperty("film")
-    @JsonIgnoreProperties(value = {"reviews", "producers", "directors", "scenarists", "actors", "studios"})
+    @JsonIgnoreProperties(value = {"reviews", "producers", "directors",
+            "scenarists", "actors", "studios", "countries", "categories", "reviewsCount"})
     public Film getFilm() {
         return id.getFilm();
     }
@@ -37,7 +38,18 @@ public class Review {
         return id.getUser();
     }
 
-    @Size(max = 4000, message = "Review must contain up to 4000 characters")
+
+    @JsonProperty("film")
+    public void setFilm(Film film) {
+        id.setFilm(film);
+    }
+
+    @JsonProperty("user")
+    public void setUser(User user) {
+        id.setUser(user);
+    }
+
+    @Size(max = 1000, message = "Review must contain up to 1000 characters")
     @Column(name = "text")
     private String text;
 

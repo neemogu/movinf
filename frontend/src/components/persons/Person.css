@@ -3,6 +3,11 @@
     display: inline;
 }
 
+.person-name {
+    margin: 0;
+    letter-spacing: 2px;
+}
+
 .person {
     padding: 15px;
 }

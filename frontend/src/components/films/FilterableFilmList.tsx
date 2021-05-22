@@ -11,6 +11,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 
 import {convertDate} from "../Utility";
+import {backLink} from "../Utility";
 
 interface FilmListProps {
     canEditOrAdd: boolean
@@ -21,6 +22,7 @@ interface FilmListState {
     filters: FilmFilters,
     lists: FilmFilterLists,
     pagesTotal: number,
+    currentPage: number,
     error: any,
     isLoaded: boolean
 }
@@ -92,6 +94,7 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
                 persons: []
             },
             pagesTotal: 0,
+            currentPage: 1,
             error: null,
             isLoaded: false
         };
@@ -130,7 +133,7 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
 
     changePage(event: object, page: number) {
         const params = this.getUrlParams();
-        fetch("http://localhost:8080/films/all/" + (page - 1).toString() + "?" + params)
+        fetch(backLink + "/films/all/" + (page - 1).toString() + "?" + params)
             .then(response => response.json())
             .then(data => this.setState({
                 films: data.list.map(function (film: any) {
@@ -147,7 +150,8 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
                         reviewsCount: film.reviewsCount
                     }
                 }),
-                isLoaded: true
+                isLoaded: true,
+                currentPage: page
             }), error => {
                 this.setState({
                     error: error,
@@ -158,7 +162,7 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
 
     updateList(event: any) {
         const params = this.getUrlParams();
-        fetch("http://localhost:8080/films/all/pages?" + params)
+        fetch(backLink + "/films/all/pages?" + params)
             .then(response => response.text())
             .then(data => this.setState({pagesTotal: parseInt(data)}), error => {
                 this.setState({
@@ -170,31 +174,31 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/persons")
+        fetch(backLink + "/persons")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                 ...this.state.lists,
                 persons: data.list
             }}))
-        fetch("http://localhost:8080/categories")
+        fetch(backLink + "/categories")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                     ...this.state.lists,
                     categories: data.list
                 }}))
-        fetch("http://localhost:8080/countries")
+        fetch(backLink + "/countries")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                     ...this.state.lists,
                     countries: data.list
                 }}))
-        fetch("http://localhost:8080/languages")
+        fetch(backLink + "/languages")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                     ...this.state.lists,
                     languages: data.list
                 }}))
-        fetch("http://localhost:8080/films/age-ratings")
+        fetch(backLink + "/films/age-ratings")
             .then(response => response.json())
             .then(data => this.setState({lists: {
                     ...this.state.lists,
@@ -256,7 +260,7 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
             return (<div>Error occurred, try to refresh a page</div>);
         }
         if (!this.state.isLoaded) {
-            return (<div>Loading...</div>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <div className="film-list">
@@ -459,19 +463,23 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
                         </Button>
                     </div>
                 </div>
-                <div className="film-list-add">
-                    <Button>
-                        <Link to="/films/new">
-                            Add new Film
-                        </Link>
-                    </Button>
-                </div>
+                {this.props.canEditOrAdd ? (
+                    <div className="film-list-add">
+                        <Button>
+                            <Link to="/films/new">
+                                Add new Film
+                            </Link>
+                        </Button>
+                    </div>
+                ) : ""}
                 <div className="film-list-pages">
-                    <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
+                    <Pagination page={this.state.currentPage} defaultPage={1} boundaryCount={3}
+                                count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
                 <FilmList canEdit={this.props.canEditOrAdd} films={this.state.films}/>
                 <div className="film-list-pages">
-                    <Pagination defaultPage={1} boundaryCount={3} count={this.state.pagesTotal} onChange={this.changePage}/>
+                    <Pagination page={this.state.currentPage} defaultPage={1} boundaryCount={3}
+                                count={this.state.pagesTotal} onChange={this.changePage}/>
                 </div>
             </div>
         );

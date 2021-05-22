@@ -1,5 +1,6 @@
 .film-age-rating {
     color: gray;
+    padding: 1px 3px;
     border: 1px solid gray;
     border-radius: 5px;
 }
@@ -12,6 +13,7 @@
 .film-title {
     color: black;
     display: inline;
+    letter-spacing: 3px;
 }
 
 .film-short-description-div {
@@ -37,6 +39,7 @@
 
 .film {
     padding: 15px;
+    max-width: 95vw;
 }
 
 .film-about-table {
@@ -100,6 +103,16 @@
     font-size: 15px;
 }
 
+.film-rating-count a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.film-rating-count a:hover {
+    text-decoration: none;
+    color: blue;
+}
+
 .film-reviews-view-all button {
     border: 1px solid black;
     margin-bottom: 20px;
@@ -112,4 +125,24 @@
 
 .film-reviews-view-all a:hover {
     color: blue;
+}
+
+.film-reviews-title {
+    display: inline-block;
+    letter-spacing: 3px;
+}
+
+.review-add {
+    margin-bottom: 20px;
+    margin-left: 275px;
+    display: inline-block;
+}
+
+.review-add button {
+    border: 1px solid black;
+}
+
+.review-add a {
+    text-decoration: none;
+    color: black;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    Link,
     useParams
 } from "react-router-dom"
 
@@ -7,14 +8,16 @@ import {FilmData} from "../films/FilmListElement";
 import {PersonData} from "../persons/PersonListElement";
 import {strOrGap} from "../Utility";
 import "./Entity.css";
-import {AppBar, Tab} from "@material-ui/core";
+import {AppBar, Button, Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import FilmList from "../films/FilmList";
 import PersonList from "../persons/PersonList"
+import {backLink} from "../Utility";
 
 interface EntityProps {
     id: string,
-    link: string
+    link: string,
+    canEdit: boolean
 }
 
 interface EntityData {
@@ -76,7 +79,7 @@ class Entity extends React.Component<EntityProps, EntityState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080" + this.props.link + "/" + this.props.id)
+        fetch(backLink + this.props.link + "/" + this.props.id)
             .then(response => response.json())
             .then(received => this.setState({
                 data: {
@@ -98,11 +101,20 @@ class Entity extends React.Component<EntityProps, EntityState>{
             return (<div>Error occurred, try to refresh a page</div>);
         }
         if (!this.state.isLoaded) {
-            return (<h1>Loading</h1>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <div className="entity">
                 <div className="entity-name-div">
+                    {this.props.canEdit ? (
+                        <span className="entity-edit">
+                            <Button size="small">
+                                <Link to={this.props.link + "/edit/" + this.props.id}>
+                                    Edit
+                                </Link>
+                            </Button>
+                        </span>
+                    ) : ""}
                     <h1 className="entity-name">
                         {this.state.data.name}
                     </h1>
@@ -132,10 +144,10 @@ class Entity extends React.Component<EntityProps, EntityState>{
     }
 }
 
-function EntityRouteWrapper(props: {link: string}) {
+function EntityRouteWrapper(props: {link: string, canEdit: boolean}) {
     let {id} = useParams();
     return (
-        <Entity id={id} link={props.link}/>
+        <Entity id={id} link={props.link} canEdit={props.canEdit}/>
     );
 }
 

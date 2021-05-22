@@ -6,6 +6,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import "../films/FilmForm.css"
+import {backLink} from "../Utility";
 
 import {
     useParams,
@@ -74,11 +75,11 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/countries")
+        fetch(backLink + "/countries")
             .then(response => response.json())
             .then(data => this.setState({countries: data.list}))
         if (this.state.person.id !== null) {
-            fetch("http://localhost:8080/persons/" + this.state.person.id)
+            fetch(backLink + "/persons/" + this.state.person.id)
                 .then(response => response.json())
                 .then(data => this.setState({person: {
                         id: data.id,
@@ -98,7 +99,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(preparedPerson)
         };
-        fetch('http://localhost:8080/persons', requestOptions)
+        fetch(backLink + '/persons', requestOptions)
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
@@ -116,7 +117,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
         const requestOptions = {
             method: 'DELETE'
         };
-        fetch('http://localhost:8080/persons/' + this.state.person.id, requestOptions)
+        fetch(backLink + '/persons/' + this.state.person.id, requestOptions)
             .then(response => response.json());
         this.setState({redirect: true});
     }
@@ -143,7 +144,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
             return <Redirect to="/persons"/>
         }
         if (!this.state.isLoaded) {
-            return (<h1>Loading</h1>);
+            return (<h1 className="loading">Loading...</h1>);
         }
         return (
             <form className="film-form">

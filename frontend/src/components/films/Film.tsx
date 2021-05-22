@@ -4,13 +4,17 @@ import {
     Link
 } from "react-router-dom";
 import Review from "../reviews/Review"
+import {ReviewData} from "../reviews/Review";
 import "./Film.css"
 
 import {strOrGap} from "../Utility";
 import {Button} from "@material-ui/core";
+import {backLink} from "../Utility";
 
 interface FilmProps {
-    id: string;
+    id: string,
+    canEdit: boolean,
+    currentUserId: string|null
 }
 
 interface FilmData {
@@ -32,30 +36,15 @@ interface FilmData {
     scenarists: FilmPerson[],
     directors: FilmPerson[],
     producers: FilmPerson[],
-    reviews: FilmReview[],
+    reviews: ReviewData[],
     reviewsCount: string,
 }
 
 interface FilmState {
     data: FilmData,
+    isReviewExist: boolean,
     error: any,
     isLoaded: boolean
-}
-
-interface FilmReview {
-    user: {id: string, username: string},
-    text: string|null,
-    rating: string,
-    postDate: string
-}
-
-function getFilmReviewFromJson(review: any) : FilmReview {
-    return {
-        user: { id: review.user.id, username: review.user.username },
-        text: review.text,
-        rating: review.rating,
-        postDate: review.postDate
-    }
 }
 
 class Film extends React.Component<FilmProps, FilmState> {
@@ -84,13 +73,14 @@ class Film extends React.Component<FilmProps, FilmState> {
                 reviews: [],
                 reviewsCount: '0'
             },
+            isReviewExist: true,
             error: null,
             isLoaded: false
         };
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/films/" + this.props.id)
+        fetch(backLink + "/films/" + this.props.id)
             .then(response => response.json())
             .then(received => this.setState({
                 data: {
@@ -118,7 +108,15 @@ class Film extends React.Component<FilmProps, FilmState> {
                     scenarists: received.scenarists.map(getFilmPersonFromJson),
                     directors: received.directors.map(getFilmPersonFromJson),
                     producers: received.producers.map(getFilmPersonFromJson),
-                    reviews: received.reviews.map(getFilmReviewFromJson),
+                    reviews: received.reviews.map(function (review : any) {
+                        return {
+                            user: {id: review.user.id, name: review.user.username},
+                            film: {id: review.film.id, name: review.film.title},
+                            postDate: review.postDate,
+                            text: review.text,
+                            rating: review.rating
+                        }
+                    }),
                     reviewsCount: received.reviewsCount
                 },
                 isLoaded: true
@@ -128,13 +126,18 @@ class Film extends React.Component<FilmProps, FilmState> {
                     isLoaded: true
                 })
             });
+        fetch(backLink + "/reviews/exist?userId=" + this.props.currentUserId + "&filmId=" + this.props.id)
+            .then(response => response.json())
+            .then(received => {
+                this.setState({isReviewExist: received})
+            });
     }
 
     render() {
         if (this.state.error) {
-            return (<div>Error: {this.state.error.message}</div>)
+            return (<h1>Error: {this.state.error.message}</h1>)
         } else if (!this.state.isLoaded) {
-            return (<div>Loading...</div>)
+            return (<h1 className="loading">Loading...</h1>)
         } else {
             return (
                 <div className="film">
@@ -144,6 +147,15 @@ class Film extends React.Component<FilmProps, FilmState> {
                         </h1>
                         {this.state.data.ageRating !== null ? (
                             <span className="film-age-rating">{this.state.data.ageRating}</span>) : ""}
+                        {this.props.canEdit ? (
+                            <span className="film-edit">
+                                <Button size="small">
+                                    <Link to={"/films/edit/" + this.props.id}>
+                                        Edit
+                                    </Link>
+                                </Button>
+                            </span>
+                        ) : ""}
                     </div>
                     <div className="film-short-description-div">
                         <span className="film-short-description">
@@ -310,18 +322,31 @@ class Film extends React.Component<FilmProps, FilmState> {
                         <span className={this.state.data.rating === null ? "film-rating" : (this.state.data.rating >= 6 ?
                             "film-rating-positive" : "film-rating-negative")}>
                             {this.state.data.rating !== null ? this.state.data.rating.toString().slice(0, 4) : "-"}</span>
-                        <span className="film-rating-count">{parseInt(this.state.data.reviewsCount) !== 0 ?
-                            "(" + this.state.data.reviewsCount + " reviews)" : ""}</span>
+                        <span className="film-rating-count">
+                            {parseInt(this.state.data.reviewsCount) !== 0 ?
+                                (<Link to={"/reviews/film/" + this.props.id}>
+                                    {"(" + this.state.data.reviewsCount + " reviews)"}
+                                </Link>) : ""}
+                        </span>
                     </div>
                     <div className="film-reviews-div">
-                        <h3>
+                        <h2 className="film-reviews-title">
                             Reviews
-                        </h3>
+                        </h2>
+                        {!this.state.isReviewExist ? (
+                            <div className="review-add">
+                                <Button>
+                                    <Link to={"/reviews/film/add/" + this.props.id}>
+                                        Add new review
+                                    </Link>
+                                </Button>
+                            </div>
+                        ) : ""}
                         {this.state.data.reviews.map((review) =>
                             (<Review key={review.user.id + " " + this.props.id}
-                                     film={{id: this.props.id, title: this.state.data.title}}
-                                     user={review.user} text={review.text} rating={review.rating}
-                                     postDate={review.postDate}/>)
+                                     data = {review} known="film"
+                                     canEdit={this.props.canEdit ||
+                                     (this.props.currentUserId !== null && review.user.id == this.props.currentUserId)}/>)
                         )}
                         <div className="film-reviews-view-all">
                             <Button>
@@ -337,10 +362,10 @@ class Film extends React.Component<FilmProps, FilmState> {
     }
 }
 
-function FilmRouteWrapper() {
+function FilmRouteWrapper(props: {canEdit: boolean, currentUserId: string|null}) {
     let {id} = useParams();
     return (
-        <Film id={id}/>
+        <Film canEdit={props.canEdit} currentUserId={props.currentUserId} id={id}/>
     );
 }
 

@@ -1,10 +1,14 @@
 package ru.pogodaev.movinf.users;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ru.pogodaev.movinf.films.Film;
 import ru.pogodaev.movinf.reviews.Review;
 
 import javax.persistence.*;
@@ -18,6 +22,7 @@ import java.util.*;
 @EqualsAndHashCode(exclude = {"reviews"})
 @ToString(exclude = {"reviews"})
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,19 +50,43 @@ public class User {
     @Column(name = "birthdate")
     private Date birthdate;
 
-    public enum Gender { MALE, FEMALE }
+    public enum Gender {
+        MALE("Male"),
+        FEMALE("Female");
+
+        private final String strValue;
+
+        Gender(String strValue) {
+            this.strValue = strValue;
+        }
+
+        public static Gender fromStrValue(String value) {
+            switch (value) {
+                case "Male":
+                    return MALE;
+                case "Female":
+                default:
+                    return FEMALE;
+            }
+        }
+        @JsonValue
+        public String getStrValue() {
+            return strValue;
+        }
+    }
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "gender")
     private Gender gender;
 
     @NotNull(message = "Enter your email")
-    @Size(min = 4, max = 100, message = "Wrong email size, must be from 4 to 100")
+    @Size(max = 100, message = "Wrong email size, must be up to 100")
     @Email(message = "Wrong email format")
     @Column(name = "email")
     private String email;
 
     @Column(name = "registration_date")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date registrationDate;
 
     @PrePersist
@@ -65,14 +94,26 @@ public class User {
         registrationDate = new Date();
     }
 
-    @OneToMany(mappedBy = "id.user", cascade = {CascadeType.REMOVE})
-    @JsonIgnoreProperties(value = {"user"})
+    @OneToMany(mappedBy = "id.user")
     private List<Review> reviews;
 
-    public enum UserRole { USER, ADMIN }
+    public enum UserRole {
+        USER("USER"),
+        ADMIN("ADMIN");
+
+        private final String strValue;
+
+        UserRole(String strValue) {
+            this.strValue = strValue;
+        }
+
+        @JsonValue
+        public String getStrValue() {
+            return strValue;
+        }
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    @JsonIgnore
     private UserRole role = UserRole.USER;
 }
