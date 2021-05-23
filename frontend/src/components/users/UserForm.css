@@ -1,0 +1,15 @@
+.user-form {
+    margin: 20px;
+    min-height: 100vh;
+    padding-top: 15px;
+}
+
+.user-form div {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.MuiFormLabel-root.MuiInputLabel-root {
+    padding-left: 7px;
+}

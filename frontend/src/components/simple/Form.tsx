@@ -92,10 +92,15 @@ class Form extends React.Component<FormProps, FormState>{
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
+                    return response.json();
+                } else if (response.status === 409) {
+                    alert("Object with this name is already exist");
+                    this.setState({redirect: true});
+                    return response.text();
                 } else {
                     window.scrollTo(0, 0);
+                    return response.json()
                 }
-                return response.json();
             })
             .then(errors => {
                 this.setState({error: errors});

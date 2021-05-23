@@ -84,30 +84,30 @@ class Film extends React.Component<FilmProps, FilmState> {
             .then(response => response.json())
             .then(received => this.setState({
                 data: {
-                    title: received.title,
-                    shortDescription: received.shortDescription,
-                    fullDescription: received.fullDescription,
-                    productionDate: received.productionDate,
-                    tagline: received.tagline,
-                    language: received.language,
-                    budget: received.budget,
-                    boxOffice: received.boxOffice,
-                    minutesDuration: received.minutesDuration,
-                    ageRating: received.ageRating,
-                    rating: received.rating,
-                    countries: received.countries,
-                    categories: received.categories,
-                    studios: received.studios,
-                    actors: received.actors.map(function (actor: any) {
+                    title: received.film.title,
+                    shortDescription: received.film.shortDescription,
+                    fullDescription: received.film.fullDescription,
+                    productionDate: received.film.productionDate,
+                    tagline: received.film.tagline,
+                    language: received.film.language,
+                    budget: received.film.budget,
+                    boxOffice: received.film.boxOffice,
+                    minutesDuration: received.film.minutesDuration,
+                    ageRating: received.film.ageRating,
+                    rating: received.film.rating,
+                    countries: received.film.countries,
+                    categories: received.film.categories,
+                    studios: received.film.studios,
+                    actors: received.film.actors.map(function (actor: any) {
                         return {
                             id: actor.id,
                             person: getFilmPersonFromJson(actor.person),
                             role: actor.role
                         }
                     }),
-                    scenarists: received.scenarists.map(getFilmPersonFromJson),
-                    directors: received.directors.map(getFilmPersonFromJson),
-                    producers: received.producers.map(getFilmPersonFromJson),
+                    scenarists: received.film.scenarists.map(getFilmPersonFromJson),
+                    directors: received.film.directors.map(getFilmPersonFromJson),
+                    producers: received.film.producers.map(getFilmPersonFromJson),
                     reviews: received.reviews.map(function (review : any) {
                         return {
                             user: {id: review.user.id, name: review.user.username},
@@ -135,9 +135,9 @@ class Film extends React.Component<FilmProps, FilmState> {
 
     render() {
         if (this.state.error) {
-            return (<h1>Error: {this.state.error.message}</h1>)
+            return (<h1>This user doesn't exist</h1>);
         } else if (!this.state.isLoaded) {
-            return (<h1 className="loading">Loading...</h1>)
+            return (<h1 className="loading">Loading...</h1>);
         } else {
             return (
                 <div className="film">

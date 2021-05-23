@@ -19,11 +19,16 @@ import List from "./components/simple/List";
 import FormRouteWrapper from "./components/simple/Form";
 import FilterableReviewListRouteWrapper from "./components/reviews/FilterableReviewList";
 import ReviewFormRouteWrapper from "./components/reviews/ReviewForm";
+import UserRouteWrapper from "./components/users/User";
+import FilterableUserList from "./components/users/FilterableUserList";
+import UserFormRouteWrapper from "./components/users/UserForm";
+import LoginForm from "./components/users/LoginForm";
+import {logout} from "./components/users/Logout";
 
 function App() {
-    const [isLogged, setIsLogged] = useState<boolean>(true);
-    const [role, setRole] = useState<string>("USER");
-    const [user, setUser] = useState<string>("2");
+    const [isLogged, setIsLogged] = useState<boolean>(false);
+    const [role, setRole] = useState<string>("ADMIN");
+    const [user, setUser] = useState<string>("1");
     const [authToken, setAuthToken] = useState<string>('');
 
     return (
@@ -83,6 +88,13 @@ function App() {
                                 <li className="login-register-nav">
                                     <Link to="/register">
                                         Register
+                                    </Link>
+                                </li>
+                            ) : ""}
+                            {isLogged ? (
+                                <li className="login-register-nav">
+                                    <Link to="/logout">
+                                        Logout
                                     </Link>
                                 </li>
                             ) : ""}
@@ -237,21 +249,23 @@ function App() {
                                                               currentUserId={user}/>
                         </Route>
                         <Route exact path="/users">
-                            Users
+                            <FilterableUserList canEditOrAdd={role === "ADMIN"}/>
+                        </Route>
+                        <Route path="/users/edit/:id">
+                            <UserFormRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route path="/users/:id">
-
-                        </Route>
-                        <Route path="/users/current">
-
+                            <UserRouteWrapper canEdit={role === "ADMIN"} currentUserId={user}/>
                         </Route>
                         <Route path="/login">
-                            <PersonFormRouteWrapper/>
+                            <LoginForm authHandler={() => {}}/>
                         </Route>
                         <Route path="/register">
-                            <PersonFormRouteWrapper/>
+                            <UserFormRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
-
+                        <Route path="/logout">
+                            {logout()}
+                        </Route>
                     </Switch>
                 </div>
             </Router>

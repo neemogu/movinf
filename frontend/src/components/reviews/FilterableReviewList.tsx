@@ -90,20 +90,21 @@ class FilterableReviewList extends React.Component<ReviewListProps, ReviewListSt
         const params = this.getUrlParams(page);
         fetch(backLink + "/reviews/" + this.props.known + "/" + this.props.id  + "?" + params)
             .then(response => response.json())
-            .then(data => this.setState({
-                reviews: data.map(function (review: any) {
-                    console.log(review);
-                    return {
-                        film: {id: review.film.id, name: review.film.title},
-                        user: {id: review.user.id, name: review.user.username},
-                        text: review.text,
-                        postDate: review.postDate,
-                        rating: review.rating
-                    }
-                }),
-                isLoaded: true,
-                currentPage: page
-            }), error => {
+            .then(data => {
+                this.setState({
+                    reviews: data.map(function (review: any) {
+                        return {
+                            film: {id: review.film.id, name: review.film.title},
+                            user: {id: review.user.id, name: review.user.username},
+                            text: review.text,
+                            postDate: review.postDate,
+                            rating: review.rating
+                        }
+                    }),
+                    isLoaded: true,
+                    currentPage: page
+                })
+            }, error => {
                 this.setState({
                     error: error,
                     isLoaded: true
@@ -185,7 +186,7 @@ class FilterableReviewList extends React.Component<ReviewListProps, ReviewListSt
                             />
                         </MuiPickersUtilsProvider>
                     </div>
-                    <div className="film-list-filter-container">
+                    <div className="review-list-filter-container">
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 variant="inline"

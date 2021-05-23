@@ -138,16 +138,6 @@ public class Film {
     @JsonIgnore
     private List<Review> reviews;
 
-    @JsonProperty("reviews")
-    public List<Review> lastReviews() {
-        return reviews.subList(0, Math.min(3, reviews.size()));
-    }
-
-    @JsonProperty("reviewsCount")
-    public int reviewsCount() {
-        return reviews.size();
-    }
-
     public enum AgeRating {
         ZERO_PLUS("0+"),
         SIX_PLUS("6+"),

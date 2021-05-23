@@ -10,6 +10,7 @@ import ru.pogodaev.movinf.categories.Category;
 import ru.pogodaev.movinf.countries.Country;
 import ru.pogodaev.movinf.persons.Person;
 import ru.pogodaev.movinf.reviews.Review;
+import ru.pogodaev.movinf.reviews.ReviewRepository;
 import ru.pogodaev.movinf.reviews.ReviewService;
 
 import javax.persistence.EntityManager;
@@ -26,15 +27,18 @@ public class FilmService {
     private final FilmRepository filmRepository;
     private final ActorService actorService;
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public FilmService(FilmRepository filmRepository, ActorService actorService, ReviewService reviewService) {
+    public FilmService(FilmRepository filmRepository, ActorService actorService, ReviewService reviewService,
+                       ReviewRepository reviewRepository) {
         this.filmRepository = filmRepository;
         this.actorService = actorService;
         this.reviewService = reviewService;
+        this.reviewRepository = reviewRepository;
     }
 
     private void getPredicates(CriteriaBuilder builder,
@@ -91,7 +95,7 @@ public class FilmService {
         }
     }
 
-    public Iterable<Film> getPagedList(int page, int pageSize,
+    public Iterable<FilmListElement> getPagedList(int page, int pageSize,
                                        String sortBy, Optional<String> sortDir,
                                        String title,
                                        Date productionDateStart, Date productionDateEnd,
@@ -124,14 +128,15 @@ public class FilmService {
         query.having(builder.and(havingPredicates.toArray(new Predicate[0])));
         query.distinct(true);
         Iterable<Film> result = em.createQuery(query.select(root)).setFirstResult(page * pageSize).setMaxResults(pageSize).getResultList();
+        List<FilmListElement> resultList = new LinkedList<>();
         for (Film film: result) {
             film.getCountries().size();
             film.getCategories().size();
-            film.getReviews().size();
+            resultList.add(new FilmListElement(film, reviewRepository.getReviewsCountByFilm(film.getId())));
         }
         em.getTransaction().commit();
         em.close();
-        return result;
+        return resultList;
     }
 
     public long pageCount(int pageSize,
@@ -166,18 +171,23 @@ public class FilmService {
         return result / pageSize +(result % pageSize == 0 ? 0 : 1);
     }
 
-    public Film specificFilm(long id) {
+    public FilmWithReviews specificFilm(long id) {
         Optional<Film> found = filmRepository.findById(id);
-        return found.orElse(null);
-    }
-
-    public Iterable<Film> getTop(int topNum) {
-        PageRequest pr = PageRequest.of(0, topNum, Sort.by("rating").descending());
-        return filmRepository.findAll(pr).getContent();
+        if (found.isPresent()) {
+            Film film = found.get();
+            return new FilmWithReviews(film, reviewRepository.getFirstReviewsByFilm(film.getId(), 3),
+                    reviewRepository.getReviewsCountByFilm(film.getId()));
+        } else {
+            return null;
+        }
     }
 
     public void deleteFilm(long id) {
-        Film film = specificFilm(id);
+        Optional<Film> found = filmRepository.findById(id);
+        if (found.isEmpty()) {
+            return;
+        }
+        Film film = found.get();
         film.getDirectors().clear();
         film.getProducers().clear();
         film.getScenarists().clear();
@@ -192,12 +202,14 @@ public class FilmService {
 
     public void addOrUpdateFilm(Film film) {
         if (film.getId() != null) {
-            Film prev = specificFilm(film.getId());
-            if (prev != null) {
-                deleteActors(prev);
-                saveActors(film);
-                filmRepository.save(film);
+            Optional<Film> found = filmRepository.findById(film.getId());
+            if (found.isEmpty()) {
+                return;
             }
+            Film prev = found.get();
+            deleteActors(prev);
+            saveActors(film);
+            filmRepository.save(film);
         } else {
             Film saved = filmRepository.save(film);
             film.setId(saved.getId());

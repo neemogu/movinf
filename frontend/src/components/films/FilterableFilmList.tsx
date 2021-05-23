@@ -136,17 +136,17 @@ class FilterableFilmList extends React.Component<FilmListProps, FilmListState>{
         fetch(backLink + "/films/all/" + (page - 1).toString() + "?" + params)
             .then(response => response.json())
             .then(data => this.setState({
-                films: data.list.map(function (film: any) {
+                films: data.map(function (film: any) {
                     return {
-                        id: film.id,
-                        title: film.title,
-                        shortDescription: film.shortDescription,
-                        productionDate: film.productionDate,
-                        language: film.language,
-                        ageRating: film.ageRating,
-                        rating: film.rating,
-                        countries: film.countries,
-                        categories: film.categories,
+                        id: film.film.id,
+                        title: film.film.title,
+                        shortDescription: film.film.shortDescription,
+                        productionDate: film.film.productionDate,
+                        language: film.film.language,
+                        ageRating: film.film.ageRating,
+                        rating: film.film.rating,
+                        countries: film.film.countries,
+                        categories: film.film.categories,
                         reviewsCount: film.reviewsCount
                     }
                 }),

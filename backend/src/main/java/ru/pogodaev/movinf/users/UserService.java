@@ -1,6 +1,7 @@
 package ru.pogodaev.movinf.users;
 
 import org.springframework.stereotype.Service;
+import ru.pogodaev.movinf.reviews.ReviewRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,12 +18,14 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository repository;
+    private final ReviewRepository reviewRepository;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, ReviewRepository reviewRepository) {
         this.repository = repository;
+        this.reviewRepository = reviewRepository;
     }
 
     private void getPredicates(CriteriaBuilder builder,
@@ -37,6 +40,7 @@ public class UserService {
                                Optional<String> gender,
                                Date regDateFrom,
                                Date regDateTo) {
+        wherePredicates.add(builder.notEqual(root.get("role"), User.UserRole.ADMIN));
         if (!username.equals("")) {
             wherePredicates.add(
                     builder.like(builder.lower(root.get("username")), "%" + username.toLowerCase() + "%")
@@ -60,8 +64,8 @@ public class UserService {
             );
         }
         wherePredicates.add(
-                builder.and(
-                        builder.isNotNull(root.get("birthdate")),
+                builder.or(
+                        builder.isNull(root.get("birthdate")),
                         builder.between(root.get("birthdate"), birthdateFrom, birthdateTo)
                 ));
         wherePredicates.add(builder.between(root.get("registrationDate"), regDateFrom, regDateTo));
@@ -70,19 +74,19 @@ public class UserService {
         }
     }
 
-    public Iterable<User> getPagedList(int page,
-                                       int pageSize,
-                                       String sortBy,
-                                       Optional<String> sortDir,
-                                       String username,
-                                       String firstname,
-                                       String lastname,
-                                       String email,
-                                       Date birthdateFrom,
-                                       Date birthdateTo,
-                                       Optional<String> gender,
-                                       Date regDateFrom,
-                                       Date regDateTo) {
+    public Iterable<UserListElement> getPagedList(int page,
+                                                  int pageSize,
+                                                  String sortBy,
+                                                  Optional<String> sortDir,
+                                                  String username,
+                                                  String firstname,
+                                                  String lastname,
+                                                  String email,
+                                                  Date birthdateFrom,
+                                                  Date birthdateTo,
+                                                  Optional<String> gender,
+                                                  Date regDateFrom,
+                                                  Date regDateTo) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -100,15 +104,15 @@ public class UserService {
             query.orderBy(builder.desc(root.get(sortBy)));
         }
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
-        query.distinct(true);
         Iterable<User> result = em.createQuery(query.select(root)).setFirstResult(page * pageSize)
                 .setMaxResults(pageSize).getResultList();
+        List<UserListElement> resultList = new LinkedList<>();
         for (User user: result) {
-            user.getReviews().size();
+            resultList.add(new UserListElement(user, reviewRepository.getReviewsCountByUser(user.getId())));
         }
         em.getTransaction().commit();
         em.close();
-        return result;
+        return resultList;
     }
 
     public long pageCount(int pageSize,
@@ -132,7 +136,7 @@ public class UserService {
         getPredicates(builder, root, wherePredicates, username, firstname, lastname, email,
                 birthdateFrom, birthdateTo, gender, regDateFrom, regDateTo);
 
-        query.select(builder.countDistinct(root));
+        query.select(builder.count(root));
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
         Long result = em.createQuery(query).getSingleResult();
         em.getTransaction().commit();
@@ -140,27 +144,17 @@ public class UserService {
         return result / pageSize +(result % pageSize == 0 ? 0 : 1);
     }
 
-    public User getUserById(long userId) {
+    public UserWithReviews getUserById(long userId) {
         Optional<User> foundUser =  repository.findById(userId);
-        if (foundUser.isPresent() && foundUser.get().getRole() == User.UserRole.ADMIN) {
+        if (foundUser.isPresent() && foundUser.get().getRole() == User.UserRole.ADMIN || foundUser.isEmpty()) {
             return null;
         }
-        return foundUser.orElse(null);
+        User user = foundUser.get();
+        return new UserWithReviews(user, reviewRepository.getFirstReviewsByUser(user.getId(), 3),
+                    reviewRepository.getReviewsCountByUser(user.getId()));
     }
 
-    public User getUserByUsername(String username) {
-        Optional<User> foundUser =  repository.findByUsername(username);
-        if (foundUser.isPresent() && foundUser.get().getRole() == User.UserRole.ADMIN) {
-            return null;
-        }
-        return foundUser.orElse(null);
-    }
-
-    public User getUserByEmail(String email) {
-        Optional<User> foundUser =  repository.findByEmail(email);
-        if (foundUser.isPresent() && foundUser.get().getRole() == User.UserRole.ADMIN) {
-            return null;
-        }
-        return foundUser.orElse(null);
+    public void addOrUpdateUser(User user) {
+        repository.save(user);
     }
 }

@@ -1,0 +1,72 @@
+.user-edit {
+    float: right;
+}
+
+.user-edit button {
+    border: 1px solid black;
+}
+
+.user-edit a {
+    text-decoration: none;
+    color: black;
+}
+
+.user-list {
+    display: inline-block;
+    width: 100vw;
+}
+
+.user-list-content {
+    margin: 20px;
+}
+
+.user-list-element {
+    background-color: lightskyblue;
+    border: solid lightseagreen 2px;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 15px 15px 20px;
+    max-width: 70vw;
+}
+
+.user-list-element h2 {
+    margin: 0;
+}
+
+.user-list-element-about {
+    margin: 15px 0;
+}
+
+.user-username a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-username a:hover {
+    color: blue;
+}
+
+.user-list-filter-toolbar {
+    margin: 20px;
+    border: 1px solid black;
+    padding: 8px;
+    max-width: 80vw;
+}
+
+.user-list-filter-container {
+    display: inline-block;
+    margin: 10px;
+}
+
+.user-list-filter-submit {
+    margin: 10px 5px;
+}
+
+.user-list-filter-submit button {
+    border: 1px solid black;
+}
+
+.user-list-pages {
+    margin: 10px 10px 20px;
+}
+

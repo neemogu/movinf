@@ -1,0 +1,71 @@
+.user-username {
+    color: black;
+    display: inline;
+    letter-spacing: 3px;
+}
+
+.user {
+    padding: 15px;
+    max-width: 95vw;
+}
+
+.user-about-table {
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+}
+
+.user-about-table th {
+    padding-right: 50px;
+    padding-bottom: 5px;
+}
+
+.user-about-div a {
+    color: darkblue;
+    text-decoration: none;
+}
+
+.user-about-div a:hover {
+    color: blue;
+}
+
+.user-reviews-view-all {
+    margin-top: 15px;
+    font-size: 17px;
+}
+
+.user-review-count {
+    font-weight: normal;
+    color: gray;
+    font-size: 15px;
+    margin-left: 5px;
+}
+
+.user-review-count a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-review-count a:hover {
+    text-decoration: none;
+    color: blue;
+}
+
+.user-reviews-view-all button {
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+.user-reviews-view-all a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-reviews-view-all a:hover {
+    color: blue;
+}
+
+.user-reviews-title {
+    display: inline-block;
+    letter-spacing: 3px;
+}

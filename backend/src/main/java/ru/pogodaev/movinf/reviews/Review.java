@@ -31,7 +31,7 @@ public class Review {
     }
 
     @JsonProperty("user")
-    @JsonIgnoreProperties(value = {"reviews"})
+    @JsonIgnoreProperties(value = {"reviews", "reviewsCount"})
     public User getUser() {
         return id.getUser();
     }

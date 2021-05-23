@@ -194,30 +194,30 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
             fetch(backLink + "/films/" + this.state.film.id)
                 .then(response => response.json())
                 .then(data => this.setState({film: {
-                        id: data.id,
-                        title: data.title,
-                        shortDescription: data.shortDescription,
-                        fullDescription: data.fullDescription,
-                        productionDate: new Date(data.productionDate),
-                        tagline: data.tagline,
-                        language: data.language !== null ? data.language: {id: "0"},
-                        budget: data.budget,
-                        boxOffice: data.boxOffice,
-                        minutesDuration: data.minutesDuration,
-                        ageRating: data.ageRating,
-                        countries: data.countries,
-                        studios: data.studios,
-                        categories: data.categories,
-                        actors: data.actors.map(function (actor: any) {
+                        id: data.film.id,
+                        title: data.film.title,
+                        shortDescription: data.film.shortDescription,
+                        fullDescription: data.film.fullDescription,
+                        productionDate: new Date(data.film.productionDate),
+                        tagline: data.film.tagline,
+                        language: data.film.language !== null ? data.film.language: {id: "0"},
+                        budget: data.film.budget,
+                        boxOffice: data.film.boxOffice,
+                        minutesDuration: data.film.minutesDuration,
+                        ageRating: data.film.ageRating,
+                        countries: data.film.countries,
+                        studios: data.film.studios,
+                        categories: data.film.categories,
+                        actors: data.film.actors.map(function (actor: any) {
                             return {
                                 id: actor.id,
                                 person: getFilmPersonFromJson(actor.person),
                                 role: actor.role
                             }
                         }),
-                        scenarists: data.scenarists.map(getFilmPersonFromJson),
-                        directors: data.directors.map(getFilmPersonFromJson),
-                        producers: data.producers.map(getFilmPersonFromJson),
+                        scenarists: data.film.scenarists.map(getFilmPersonFromJson),
+                        directors: data.film.directors.map(getFilmPersonFromJson),
+                        producers: data.film.producers.map(getFilmPersonFromJson),
                     }}))
         }
         this.setState({isLoaded: true});

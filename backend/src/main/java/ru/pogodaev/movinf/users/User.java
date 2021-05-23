@@ -48,6 +48,7 @@ public class User {
     private String lastname;
 
     @Column(name = "birthdate")
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private Date birthdate;
 
     public enum Gender {
@@ -98,16 +99,6 @@ public class User {
     @OneToMany(mappedBy = "id.user")
     @JsonIgnore
     private List<Review> reviews;
-
-    @JsonProperty("reviews")
-    public List<Review> lastReviews() {
-        return reviews.subList(0, Math.min(3, reviews.size()));
-    }
-
-    @JsonProperty("reviewsCount")
-    public int reviewsCount() {
-        return reviews.size();
-    }
 
     public enum UserRole {
         USER("USER"),

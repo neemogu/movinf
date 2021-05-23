@@ -96,12 +96,15 @@ class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(this.state.review)
         };
-        console.log(requestOptions.body);
         fetch(backLink + '/reviews', requestOptions)
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
-                } else {
+                } else if (response.status === 409) {
+                    this.setState({redirect: true});
+                    alert("You has already added a review, please edit an existing");
+                }
+                else {
                     window.scrollTo(0, 0);
                 }
                 return response.json();

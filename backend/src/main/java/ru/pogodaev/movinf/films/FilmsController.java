@@ -22,7 +22,7 @@ public class FilmsController {
     }
 
     @GetMapping("/all/{pageNum}")
-    public FilmsList getPagedList(@PathVariable("pageNum") Integer page,
+    public Iterable<FilmListElement> getPagedList(@PathVariable("pageNum") Integer page,
                                   @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize,
                                   @RequestParam(name = "sortBy", defaultValue = "title") String sortBy,
                                   @RequestParam(name = "sortDirection") Optional<String> sortDir,
@@ -38,8 +38,8 @@ public class FilmsController {
                                   @RequestParam(name = "personId") Optional<Long> person,
                                   @RequestParam(name = "ratingFrom", defaultValue = "1") Integer ratingFrom,
                                   @RequestParam(name = "ratingTo", defaultValue = "10") Integer ratingTo) {
-        return new FilmsList(service.getPagedList(page, pageSize, sortBy, sortDir, title,
-                productionDateFrom, productionDateTo, language, ageRating, category, country, person, ratingFrom, ratingTo));
+        return service.getPagedList(page, pageSize, sortBy, sortDir, title,
+                productionDateFrom, productionDateTo, language, ageRating, category, country, person, ratingFrom, ratingTo);
     }
 
     @GetMapping("/all/pages")
@@ -61,18 +61,13 @@ public class FilmsController {
     }
 
     @GetMapping("/{filmId}")
-    public ResponseEntity<Film> specificFilm(@PathVariable("filmId") Long id) {
-        Film found = service.specificFilm(id);
+    public ResponseEntity<FilmWithReviews> specificFilm(@PathVariable("filmId") Long id) {
+        FilmWithReviews found = service.specificFilm(id);
         if (found != null) {
             return new ResponseEntity<>(found, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @GetMapping("/top")
-    public Iterable<Film> getTop(@RequestParam(value = "topNum", defaultValue = "20") Integer topNum) {
-        return service.getTop(topNum);
     }
 
     @PostMapping(consumes = "application/json")
