@@ -1,9 +1,7 @@
 import React from "react";
 import {
-    Button, MenuItem, TextField
+    Button, TextField
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import "./UserForm.css";
 import "../films/FilmForm.css"
@@ -25,7 +23,7 @@ interface LoginFormState {
 }
 
 interface LoginFormProps {
-    authHandler: () => void
+    authHandler: (role: string, user: string, authToken: string) => void
 }
 
 class LoginForm extends React.Component<LoginFormProps, LoginFormState>{
@@ -54,9 +52,17 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState>{
             method: 'POST'
         };
         fetch(backLink + '/login', requestOptions)
-            .then(response => {
+            .then(async response => {
                 if (response.ok) {
                     this.setState({redirect: true});
+                    const token = await response.text();
+                    const loggedRequestOptions = {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + token}
+                    };
+                    fetch(backLink + '/user/current')
+                        .then(response => response.json())
+                        .then(user => this.props.authHandler(user.role, user.id, token))
                 } else {
                     window.scrollTo(0, 0);
                     this.setState({error: true})

@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.pogodaev.movinf.users.User;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -20,14 +23,27 @@ public class ReviewController {
         this.service = service;
     }
 
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User)authentication.getPrincipal();
+    }
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<String> addReview(@RequestBody @Valid Review review) {
+        User currentUser = getCurrentUser();
+        if (!(currentUser.getId().equals(review.getUser().getId()) || currentUser.getRole() == User.UserRole.ADMIN)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         service.addOrUpdateReview(review);
         return ResponseEntity.ok("Review was successfully added");
     }
 
     @PutMapping(consumes = "application/json")
     public ResponseEntity<String> updateReview(@RequestBody @Valid Review review) {
+        User currentUser = getCurrentUser();
+        if (!(currentUser.getId().equals(review.getUser().getId()) || currentUser.getRole() == User.UserRole.ADMIN)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         service.addOrUpdateReview(review);
         return ResponseEntity.ok("Review was successfully updated");
     }
@@ -35,6 +51,10 @@ public class ReviewController {
     @DeleteMapping
     public ResponseEntity<String> deleteReview(@RequestParam("userId") Long userId,
                                                @RequestParam("filmId") Long filmId) {
+        User currentUser = getCurrentUser();
+        if (!(currentUser.getId().equals(userId) || currentUser.getRole() == User.UserRole.ADMIN)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         service.deleteReview(userId, filmId);
         return new ResponseEntity<>("Review was deleted", HttpStatus.NO_CONTENT);
     }

@@ -1,19 +1,22 @@
-package ru.pogodaev.movinf.users;
+package ru.pogodaev.movinf.auth;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.pogodaev.movinf.users.User;
+import ru.pogodaev.movinf.users.UserRepository;
 
 import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-@AllArgsConstructor
 public class SecuredUserController {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
@@ -24,24 +27,20 @@ public class SecuredUserController {
         this.encoder = encoder;
     }
 
-    @GetMapping("/logout")
-    public boolean logout() {
-        return true;
-    }
-
     @GetMapping("/current")
     public User currentUser() {
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User)authentication.getPrincipal();
     }
 
     @PutMapping
     public ResponseEntity<String> editUser(@RequestBody @Valid User user) {
-        Optional<User> foundUser = userRepository.findById(user.getId());
-        if (foundUser.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        User currentUser = currentUser();
+        if (!currentUser.getId().equals(user.getId()) && !currentUser.getRole().equals(User.UserRole.ADMIN)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         if (!user.getPassword().equals("")) {
-            user.setPassword(foundUser.get().getPassword());
+            user.setPassword(currentUser.getPassword());
         } else {
             user.setPassword(encoder.encode(user.getPassword()));
         }

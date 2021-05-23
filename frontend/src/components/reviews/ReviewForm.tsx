@@ -187,8 +187,13 @@ class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
     }
 }
 
-function ReviewFormRouteWrapper(props: { currentUserId: string }) {
+function ReviewFormRouteWrapper(props: { currentUserId: string|null }) {
     let {id} = useParams();
+    if (props.currentUserId === null) {
+        return (
+            <Redirect to="/"/>
+        )
+    }
     return (
         <ReviewForm filmId={id} userId={props.currentUserId}/>
     );

@@ -23,13 +23,31 @@ import UserRouteWrapper from "./components/users/User";
 import FilterableUserList from "./components/users/FilterableUserList";
 import UserFormRouteWrapper from "./components/users/UserForm";
 import LoginForm from "./components/users/LoginForm";
-import {logout} from "./components/users/Logout";
+
+import {backLink} from "./components/Utility";
 
 function App() {
     const [isLogged, setIsLogged] = useState<boolean>(false);
-    const [role, setRole] = useState<string>("ADMIN");
-    const [user, setUser] = useState<string>("1");
-    const [authToken, setAuthToken] = useState<string>('');
+    const [role, setRole] = useState<string|null>(null);
+    const [user, setUser] = useState<string|null>(null);
+    const [authToken, setAuthToken] = useState<string|null>(null);
+
+    function Logout() {
+        setIsLogged(false);
+        setRole(null);
+        setUser(null);
+        setAuthToken(null);
+        return (
+            <Redirect to="/" />
+        );
+    }
+
+    function login(role: string, user: string, authToken: string): void {
+        setIsLogged(true);
+        setRole(role);
+        setUser(user);
+        setAuthToken(authToken);
+    }
 
     return (
         <div className="App">
@@ -258,13 +276,13 @@ function App() {
                             <UserRouteWrapper canEdit={role === "ADMIN"} currentUserId={user}/>
                         </Route>
                         <Route path="/login">
-                            <LoginForm authHandler={() => {}}/>
+                            <LoginForm authHandler={login}/>
                         </Route>
                         <Route path="/register">
                             <UserFormRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route path="/logout">
-                            {logout()}
+                            <Logout/>
                         </Route>
                     </Switch>
                 </div>
