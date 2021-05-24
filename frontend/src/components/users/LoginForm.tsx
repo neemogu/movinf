@@ -59,12 +59,16 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState>{
                     window.scrollTo(0, 0);
                     alert("Invalid username or password");
                     this.setState({error: true})
+                } else {
+                    this.setState({error: false})
                 }
                 return response.json();
             })
             .then(loginData => {
-                this.props.authHandler(loginData.user.role, loginData.user.id, loginData.token);
-                this.setState({redirect: true});
+                if (!this.state.error) {
+                    this.props.authHandler(loginData.user.role, loginData.user.id, loginData.token);
+                    this.setState({redirect: true});
+                }
             });
     }
 

@@ -181,6 +181,7 @@ class UserForm extends React.Component<UserFormProps, UserFormState>{
                     <div className="form-text-field">
                         <TextField label="Password"
                                    type="password"
+                                   required
                                    variant="outlined"
                                    value={this.state.user.password}
                                    onChange={this.handlePasswordChange}
@@ -284,7 +285,7 @@ class UserForm extends React.Component<UserFormProps, UserFormState>{
 function UserFormRouteWrapper(props: {currentUserId: string|null, canEdit: boolean, authToken: string|null}) {
     const {id} = useParams();
     let userId = id === undefined ? null : id;
-    if (userId !== null && props.currentUserId !== userId && !props.canEdit) {
+    if (userId !== null && props.currentUserId != userId && !props.canEdit) {
         return (<Redirect to="/"/>);
     }
     return (

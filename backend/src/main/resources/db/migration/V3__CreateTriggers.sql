@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION update_film_rating_on_delete() RETURNS TRIGGER LANGUA
     END;
 $$;
 
-CREATE TRIGGER film_rating_update_on_insert AFTER INSERT ON movinf_schema.reviews
+CREATE TRIGGER film_rating_update_on_insert AFTER INSERT OR UPDATE ON movinf_schema.reviews
     FOR EACH ROW EXECUTE PROCEDURE update_film_rating_on_insert();
 
 CREATE TRIGGER film_rating_update_on_delete AFTER DELETE ON movinf_schema.reviews

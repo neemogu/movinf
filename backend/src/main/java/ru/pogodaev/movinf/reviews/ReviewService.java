@@ -29,8 +29,8 @@ public class ReviewService {
         this.repository = repository;
     }
 
-    public void addOrUpdateReview(Review review) {
-        repository.save(review);
+    public Review addOrUpdateReview(Review review) {
+        return repository.save(review);
     }
 
     public void deleteReview(long userId, long filmId) {

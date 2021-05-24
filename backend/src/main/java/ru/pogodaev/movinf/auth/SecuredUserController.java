@@ -39,11 +39,12 @@ public class SecuredUserController {
         if (!currentUser.getId().equals(user.getId()) && !currentUser.getRole().equals(User.UserRole.ADMIN)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        if (!user.getPassword().equals("")) {
+        if (user.getPassword().equals("")) {
             user.setPassword(currentUser.getPassword());
         } else {
             user.setPassword(encoder.encode(user.getPassword()));
         }
+        user.setRegistrationDate(currentUser.getRegistrationDate());
         userRepository.save(user);
         return ResponseEntity.ok("Success");
     }

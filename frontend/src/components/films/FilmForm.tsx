@@ -226,7 +226,6 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
 
     submitForm() {
         let preparedFilm = prepareFilm(JSON.parse(JSON.stringify(this.state.film)));
-        console.log(preparedFilm);
         const requestOptions: RequestInit = {
             method: preparedFilm.id === null ? 'POST' : 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken },

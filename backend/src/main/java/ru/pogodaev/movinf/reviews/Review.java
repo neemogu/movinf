@@ -31,7 +31,7 @@ public class Review {
     }
 
     @JsonProperty("user")
-    @JsonIgnoreProperties(value = {"reviews", "reviewsCount"})
+    @JsonIgnoreProperties(value = {"reviews", "reviewsCount", "password"})
     public User getUser() {
         return id.getUser();
     }
@@ -58,7 +58,7 @@ public class Review {
     private Integer rating;
 
     @Column(name = "post_date")
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy", shape = JsonFormat.Shape.STRING, timezone = "Asia/Novosibirsk")
     private Date postDate;
 
     @PrePersist

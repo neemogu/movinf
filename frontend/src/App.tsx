@@ -26,7 +26,8 @@ import LoginForm from "./components/users/LoginForm";
 import {Button} from "@material-ui/core";
 
 function App() {
-    const [isLogged, setIsLogged] = useState<boolean>(Boolean(sessionStorage.getItem("isLogged") || false));
+    const [isLogged, setIsLogged] = useState<boolean>((sessionStorage.getItem("isLogged") !== null) ?
+    sessionStorage.getItem("isLogged") === 'true' : false);
     const [role, setRole] = useState<string|null>(sessionStorage.getItem("role"));
     const [user, setUser] = useState<string|null>(sessionStorage.getItem("user"));
     const [authToken, setAuthToken] = useState<string|null>(sessionStorage.getItem("authToken"));
@@ -38,24 +39,18 @@ function App() {
     React.useEffect(() => {
         if (user) {
             sessionStorage.setItem("user", user);
-        } else {
-            sessionStorage.removeItem("user");
         }
     }, [user])
 
     React.useEffect(() => {
         if (role) {
             sessionStorage.setItem("role", role);
-        } else {
-            sessionStorage.removeItem("role");
         }
     }, [role])
 
     React.useEffect(() => {
         if (authToken) {
             sessionStorage.setItem("authToken", authToken);
-        } else {
-            sessionStorage.removeItem("authToken");
         }
     }, [authToken]);
 
@@ -64,6 +59,7 @@ function App() {
         setRole(null);
         setUser(null);
         setAuthToken(null);
+        sessionStorage.clear();
     }
 
     function login(role: string, user: string, authToken: string): void {

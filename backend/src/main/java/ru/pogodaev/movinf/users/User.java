@@ -37,9 +37,8 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
 
-    @NotNull(message = "Enter password")
+    @NotNull(message = "Enter a password")
     @Column(name = "password")
-    @JsonIgnore
     private String password;
 
     @Size(max = 50, message = "Firstname must be up to 50 characters")
@@ -118,7 +117,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "registration_date")
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING, timezone = "Asia/Novosibirsk")
     private Date registrationDate;
 
     @PrePersist
