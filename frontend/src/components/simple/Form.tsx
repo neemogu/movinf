@@ -8,7 +8,9 @@ import {backLink} from "../Utility";
 
 import {
     useParams,
-    Redirect
+    Redirect,
+    useHistory,
+    useLocation
 } from "react-router-dom";
 
 interface FormData {
@@ -26,7 +28,9 @@ interface FormState {
 interface FormProps {
     id: string|null,
     link: string,
-    authToken: string
+    authToken: string,
+    history: any,
+    redirected: boolean
 }
 
 function findInList(id: string|null, list: {id: string, name: string}[]) {
@@ -46,9 +50,9 @@ class Form extends React.Component<FormProps, FormState>{
                 id: this.props.id,
                 name: ''
             },
+            redirect: false,
             isLoaded: false,
-            error: {},
-            redirect: false
+            error: {}
         }
         this.deleteItem = this.deleteItem.bind(this);
         this.submitForm = this.submitForm.bind(this);
@@ -94,7 +98,7 @@ class Form extends React.Component<FormProps, FormState>{
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
-                    return response.json();
+                    return response.text();
                 } else if (response.status === 409) {
                     alert("Object with this name is already exist");
                     this.setState({redirect: true});
@@ -117,7 +121,7 @@ class Form extends React.Component<FormProps, FormState>{
         };
         fetch(backLink + this.props.link + "/" + this.state.data.id, requestOptions)
             .then(response => response.json());
-        this.setState({redirect: true});
+        this.setState({redirect: true})
     }
 
 
@@ -127,7 +131,11 @@ class Form extends React.Component<FormProps, FormState>{
 
     render() {
         if (this.state.redirect) {
-            return <Redirect to={this.props.link}/>
+            if (this.props.redirected) {
+                this.props.history.goBack();
+            } else {
+                return (<Redirect to={this.props.link}/>)
+            }
         }
         if (!this.state.isLoaded) {
             return (<h1 className="loading">Loading...</h1>);
@@ -166,12 +174,15 @@ class Form extends React.Component<FormProps, FormState>{
 
 function FormRouteWrapper(props: {link: string, authToken: string|null}) {
     let {id} = useParams();
+    const history = useHistory();
+    let query = new URLSearchParams(useLocation().search);
     let entityId = id === undefined ? null : id;
     if (props.authToken === null) {
         return (<Redirect to="/"/>)
     }
     return (
-        <Form authToken={props.authToken} id={entityId} link={props.link}/>
+        <Form authToken={props.authToken} redirected={query.get("redirected") !== null}
+              history={history} id={entityId} link={props.link}/>
     );
 }
 

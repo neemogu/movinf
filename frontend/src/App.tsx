@@ -8,6 +8,8 @@ import {
     Link,
     Redirect
 } from "react-router-dom";
+
+import {createBrowserHistory} from "history";
 import FilmRouteWrapper from "./components/films/Film";
 import FilterableFilmList from "./components/films/FilterableFilmList";
 import FilmFormRouteWrapper from "./components/films/FilmForm"
@@ -31,6 +33,8 @@ function App() {
     const [role, setRole] = useState<string|null>(sessionStorage.getItem("role"));
     const [user, setUser] = useState<string|null>(sessionStorage.getItem("user"));
     const [authToken, setAuthToken] = useState<string|null>(sessionStorage.getItem("authToken"));
+
+    const history = createBrowserHistory();
 
     React.useEffect(() => {
         sessionStorage.setItem("isLogged", String(isLogged));
@@ -71,7 +75,7 @@ function App() {
 
     return (
         <div className="App">
-            <Router>
+            <Router history={history}>
                 <div className="header">
                     <nav>
                         <ul className="navigation">

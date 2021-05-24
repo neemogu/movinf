@@ -10,7 +10,9 @@ import {backLink} from "../Utility";
 
 import {
     useParams,
-    Redirect
+    Redirect, Link,
+    useHistory,
+    useLocation
 } from "react-router-dom";
 
 interface Id {
@@ -35,7 +37,9 @@ interface PersonFormState {
 
 interface PersonFormProps {
     id: string|null,
-    authToken: string
+    authToken: string,
+    history: any,
+    redirected: boolean
 }
 
 function preparePerson(person: PersonFormPersonData) : PersonFormPersonData {
@@ -73,6 +77,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
         this.handleFirstnameChange = this.handleFirstnameChange.bind(this);
         this.handleLastnameChange = this.handleLastnameChange.bind(this);
         this.handleBirthdateChange = this.handleBirthdateChange.bind(this);
+        this.saveState = this.saveState.bind(this);
     }
 
     componentDidMount() {
@@ -90,6 +95,11 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
                         country: data.country !== null ? data.country: {id: "0"}
                     }}))
         }
+        const prevData = sessionStorage.getItem("personFormData");
+        if (prevData !== null) {
+            this.setState({person: JSON.parse(prevData)})
+            sessionStorage.removeItem("personFormData");
+        }
         this.setState({isLoaded: true});
     }
 
@@ -104,7 +114,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
         fetch(backLink + '/persons', requestOptions)
             .then(response => {
                 if (response.ok) {
-                    this.setState({redirect: true});
+                    this.setState({redirect: true})
                 } else {
                     window.scrollTo(0, 0);
                 }
@@ -123,9 +133,12 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
         };
         fetch(backLink + '/persons/' + this.state.person.id, requestOptions)
             .then(response => response.json());
-        this.setState({redirect: true});
+        this.setState({redirect: true})
     }
 
+    saveState() {
+        sessionStorage.setItem("personFormData", JSON.stringify(this.state.person));
+    }
 
     handleCountryChange(event: any) {
         this.setState(prevState => ({person: { ...prevState.person, country: {id: event.target.value} }}));
@@ -145,7 +158,11 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
 
     render() {
         if (this.state.redirect) {
-            return <Redirect to="/persons"/>
+            if (this.props.redirected) {
+                this.props.history.goBack();
+            } else {
+                return (<Redirect to="/persons"/>)
+            }
         }
         if (!this.state.isLoaded) {
             return (<h1 className="loading">Loading...</h1>);
@@ -221,6 +238,11 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
                                 ))}
                         </TextField>
                     </div>
+                    <Button onClick={this.saveState}>
+                        <Link to="/countries/new?redirected=true">
+                            Add new country
+                        </Link>
+                    </Button>
                 </div>
                 <div className="form-submit">
                     <Button onClick={this.submitForm}>
@@ -239,12 +261,15 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
 
 function PersonFormRouteWrapper(props: {authToken: string|null}) {
     let {id} = useParams();
+    const history = useHistory();
+    let query = new URLSearchParams(useLocation().search);
     let personId = id === undefined ? null : id;
     if (props.authToken === null) {
         return (<Redirect to="/"/>)
     }
     return (
-        <PersonForm authToken={props.authToken} id={personId}/>
+        <PersonForm redirected={query.get("redirected") !== null} history={history}
+                    authToken={props.authToken} id={personId}/>
     );
 }
 

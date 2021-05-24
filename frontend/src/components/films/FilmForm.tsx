@@ -11,7 +11,9 @@ import {backLink} from "../Utility";
 
 import {
     useParams,
-    Redirect
+    Redirect,
+    Link,
+    useHistory
 } from "react-router-dom";
 
 interface Id {
@@ -59,7 +61,8 @@ interface FilmFormState {
 
 interface FilmFormProps {
     id: string|null,
-    authToken: string
+    authToken: string,
+    history: any
 }
 
 function containsPerson(person: FilmPerson, persons: Id[]) : boolean {
@@ -170,6 +173,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
         this.handleBoxOfficeChange = this.handleBoxOfficeChange.bind(this);
         this.handleDurationChange = this.handleDurationChange.bind(this);
         this.handleAgeRatingChange = this.handleAgeRatingChange.bind(this);
+        this.saveState = this.saveState.bind(this);
     }
 
     componentDidMount() {
@@ -221,7 +225,16 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                         producers: data.film.producers.map(getFilmPersonFromJson),
                     }}))
         }
+        const prevData = sessionStorage.getItem("filmFormData");
+        if (prevData !== null) {
+            this.setState({film: JSON.parse(prevData)})
+            sessionStorage.removeItem("filmFormData");
+        }
         this.setState({isLoaded: true});
+    }
+
+    saveState() {
+        sessionStorage.setItem("filmFormData", JSON.stringify(this.state.film));
     }
 
     submitForm() {
@@ -235,7 +248,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
         fetch(backLink + '/films', requestOptions)
             .then(response => {
                 if (response.ok) {
-                    this.setState({redirect: true});
+                    this.setState({redirect: true})
                 } else {
                     window.scrollTo(0, 0);
                 }
@@ -243,19 +256,18 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
             })
             .then(errors => {
                 this.setState({error: errors});
-                console.log(errors);
             });
     }
 
     deleteItem() {
         let requestOptions: RequestInit = {
             method: 'DELETE',
-            headers: { "Authorization": "Bearer " + this.props.authToken},
+            headers: {"Authorization": "Bearer " + this.props.authToken},
             mode: 'cors'
         };
         fetch(backLink + '/films/' + this.state.film.id, requestOptions)
             .then(response => response.json());
-        this.setState({redirect: true});
+        this.setState({redirect: true})
     }
 
     handleActorPersonChange(event: any) {
@@ -425,7 +437,7 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
 
     render() {
         if (this.state.redirect) {
-            return <Redirect to="/films"/>
+            return (<Redirect to="/films"/>)
         }
         if (!this.state.isLoaded) {
             return (<h1 className="loading">Loading</h1>);
@@ -611,6 +623,11 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                                ))}
                        </TextField>
                    </div>
+                   <Button onClick={this.saveState}>
+                       <Link to="/languages/new?redirected=true">
+                           Add new language
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Categories</h3>
@@ -638,7 +655,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddCategory}>Add category</Button>
+                   <Button onClick={this.handleAddCategory}>Add category to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/categories/new?redirected=true">
+                           Add new category
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Studios</h3>
@@ -666,7 +688,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddStudio}>Add studio</Button>
+                   <Button onClick={this.handleAddStudio}>Add studio to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/studios/new?redirected=true">
+                           Add new studio
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Countries</h3>
@@ -694,7 +721,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddCountry}>Add country</Button>
+                   <Button onClick={this.handleAddCountry}>Add country to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/countries/new?redirected=true">
+                           Add new country
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Actors</h3>
@@ -733,7 +765,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            <Button name={idx.toString()} onClick={this.handleRemoveActor}>Remove</Button>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddActor}>Add actor</Button>
+                   <Button onClick={this.handleAddActor}>Add actor to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/persons/new?redirected=true">
+                           Add new person
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Directors</h3>
@@ -760,7 +797,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddDirector}>Add director</Button>
+                   <Button onClick={this.handleAddDirector}>Add director to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/persons/new?redirected=true">
+                           Add new person
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Producers</h3>
@@ -787,7 +829,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddProducer}>Add producer</Button>
+                   <Button onClick={this.handleAddProducer}>Add producer to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/persons/new?redirected=true">
+                           Add new person
+                       </Link>
+                   </Button>
                </div>
                <div className="film-form-block">
                    <h3>Scenarists</h3>
@@ -814,7 +861,12 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                            </div>
                        </div>
                    ))}
-                   <Button onClick={this.handleAddScenarist}>Add scenarist</Button>
+                   <Button onClick={this.handleAddScenarist}>Add scenarist to film</Button>
+                   <Button onClick={this.saveState}>
+                       <Link to="/persons/new?redirected=true">
+                           Add new person
+                       </Link>
+                   </Button>
                </div>
                <div className="form-submit">
                    <Button onClick={this.submitForm}>
@@ -834,12 +886,13 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
 
 function FilmFormRouteWrapper(props: {authToken: string|null}) {
     let {id} = useParams();
+    let history = useHistory();
     let filmId = id === undefined ? null : id;
     if (props.authToken === null) {
         return (<Redirect to="/"/>);
     }
     return (
-        <FilmForm authToken={props.authToken} id={filmId}/>
+        <FilmForm authToken={props.authToken} history={history} id={filmId}/>
     );
 }
 
