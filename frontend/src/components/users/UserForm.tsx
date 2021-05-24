@@ -13,7 +13,6 @@ import {
     useParams,
     Redirect
 } from "react-router-dom";
-import User from "./User";
 
 interface UserFormUserData {
     id: string|null,
@@ -35,7 +34,8 @@ interface UserFormState {
 }
 
 interface UserFormProps {
-    id: string|null
+    id: string|null,
+    authToken: string|null
 }
 
 class UserForm extends React.Component<UserFormProps, UserFormState>{
@@ -95,12 +95,19 @@ class UserForm extends React.Component<UserFormProps, UserFormState>{
     }
 
     submitForm() {
-        const requestOptions = {
-            method: this.state.user.id === null ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+        const registerRequestOptions: RequestInit = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(this.state.user)
         };
-        fetch(backLink + (this.state.user.id === null ? '/auth/register' : '/user'), requestOptions)
+        const editRequestOptions: RequestInit = {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken},
+            mode: 'cors',
+            body: JSON.stringify(this.state.user)
+        };
+        fetch(backLink + (this.state.user.id === null ? '/auth/register' : '/user'),
+            this.state.user.id === null ? registerRequestOptions : editRequestOptions)
             .then(response => {
                 if (response.ok) {
                     this.setState({redirect: true});
@@ -274,14 +281,14 @@ class UserForm extends React.Component<UserFormProps, UserFormState>{
     }
 }
 
-function UserFormRouteWrapper(props: {currentUserId: string|null, canEdit: boolean}) {
+function UserFormRouteWrapper(props: {currentUserId: string|null, canEdit: boolean, authToken: string|null}) {
     const {id} = useParams();
     let userId = id === undefined ? null : id;
     if (userId !== null && props.currentUserId !== userId && !props.canEdit) {
         return (<Redirect to="/"/>);
     }
     return (
-        <UserForm id={userId}/>
+        <UserForm authToken={props.authToken} id={userId}/>
     );
 }
 

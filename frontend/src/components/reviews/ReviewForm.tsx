@@ -30,7 +30,8 @@ interface ReviewFormState {
 
 interface ReviewFormProps {
     filmId: string,
-    userId: string
+    userId: string,
+    authToken: string,
 }
 
 class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
@@ -91,9 +92,10 @@ class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
     }
 
     submitForm() {
-        const requestOptions = {
+        const requestOptions : RequestInit = {
             method: !this.state.isExist ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken },
+            mode: 'cors',
             body: JSON.stringify(this.state.review)
         };
         fetch(backLink + '/reviews', requestOptions)
@@ -115,8 +117,10 @@ class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
     }
 
     deleteItem() {
-        const requestOptions = {
-            method: 'DELETE'
+        const requestOptions: RequestInit = {
+            method: 'DELETE',
+            headers: {'Authorization': 'Bearer ' + this.props.authToken},
+            mode: 'cors'
         };
         fetch(backLink + "/reviews?filmId=" + this.props.filmId + "&userId=" + this.props.userId,
             requestOptions).then(response => response.json());
@@ -187,15 +191,15 @@ class ReviewForm extends React.Component<ReviewFormProps, ReviewFormState>{
     }
 }
 
-function ReviewFormRouteWrapper(props: { currentUserId: string|null }) {
+function ReviewFormRouteWrapper(props: { currentUserId: string|null, authToken: string|null }) {
     let {id} = useParams();
-    if (props.currentUserId === null) {
+    if (props.currentUserId === null || props.authToken === null) {
         return (
             <Redirect to="/"/>
         )
     }
     return (
-        <ReviewForm filmId={id} userId={props.currentUserId}/>
+        <ReviewForm authToken={props.authToken} filmId={id} userId={props.currentUserId}/>
     );
 }
 

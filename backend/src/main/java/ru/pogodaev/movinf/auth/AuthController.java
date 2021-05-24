@@ -41,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam("username") final String username,
+    public ResponseEntity<LoginData> login(@RequestParam("username") final String username,
                         @RequestParam("password") final String password) throws Exception {
         authenticate(username, password);
 
@@ -50,7 +50,7 @@ public class AuthController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(new LoginData((User)userDetails, token));
     }
 
     private void authenticate(String username, String password) throws Exception {

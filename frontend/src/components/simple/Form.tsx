@@ -25,7 +25,8 @@ interface FormState {
 
 interface FormProps {
     id: string|null,
-    link: string
+    link: string,
+    authToken: string
 }
 
 function findInList(id: string|null, list: {id: string, name: string}[]) {
@@ -83,9 +84,10 @@ class Form extends React.Component<FormProps, FormState>{
     }
 
     submitForm() {
-        const requestOptions = {
+        const requestOptions: RequestInit = {
             method: this.state.data.id === null ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken },
+            mode: 'cors',
             body: JSON.stringify(this.state.data)
         };
         fetch(backLink + this.props.link, requestOptions)
@@ -108,8 +110,10 @@ class Form extends React.Component<FormProps, FormState>{
     }
 
     deleteItem() {
-        const requestOptions = {
-            method: 'DELETE'
+        const requestOptions : RequestInit = {
+            method: 'DELETE',
+            headers: {'Authorization': 'Bearer ' + this.props.authToken},
+            mode: 'cors'
         };
         fetch(backLink + this.props.link + "/" + this.state.data.id, requestOptions)
             .then(response => response.json());
@@ -160,11 +164,14 @@ class Form extends React.Component<FormProps, FormState>{
     }
 }
 
-function FormRouteWrapper(props: {link: string}) {
+function FormRouteWrapper(props: {link: string, authToken: string|null}) {
     let {id} = useParams();
     let entityId = id === undefined ? null : id;
+    if (props.authToken === null) {
+        return (<Redirect to="/"/>)
+    }
     return (
-        <Form id={entityId} link={props.link}/>
+        <Form authToken={props.authToken} id={entityId} link={props.link}/>
     );
 }
 

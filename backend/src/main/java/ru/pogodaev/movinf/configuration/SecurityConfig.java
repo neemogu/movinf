@@ -45,13 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .authorizeRequests().
+        httpSecurity.cors().and().csrf().disable().
+                authorizeRequests().
+                antMatchers( "/auth/**").permitAll().
                 antMatchers(HttpMethod.POST, "/reviews").authenticated().
                 antMatchers(HttpMethod.PUT, "/reviews").authenticated().
                 antMatchers(HttpMethod.DELETE, "/reviews").authenticated().
                 antMatchers("/user", "/user/**").authenticated().
-                antMatchers( "/auth/**").permitAll().
                 antMatchers(HttpMethod.GET).permitAll().
                 antMatchers(HttpMethod.POST).hasRole("ADMIN").
                 antMatchers(HttpMethod.DELETE).hasRole("ADMIN").

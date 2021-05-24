@@ -10,6 +10,7 @@ import {backLink} from "../Utility";
 import {
     Redirect
 } from "react-router-dom";
+import {log} from "util";
 
 interface LoginFormUserData {
     username: string,
@@ -48,25 +49,22 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState>{
     }
 
     submitForm() {
-        const requestOptions = {
+        const requestOptions: RequestInit = {
             method: 'POST'
         };
-        fetch(backLink + '/login', requestOptions)
-            .then(async response => {
-                if (response.ok) {
-                    this.setState({redirect: true});
-                    const token = await response.text();
-                    const loggedRequestOptions = {
-                        method: 'POST',
-                        headers: { 'Authorization': 'Bearer ' + token}
-                    };
-                    fetch(backLink + '/user/current')
-                        .then(response => response.json())
-                        .then(user => this.props.authHandler(user.role, user.id, token))
-                } else {
+        fetch(backLink + '/auth/login?username=' + this.state.user.username + '&password=' + this.state.user.password,
+            requestOptions)
+            .then(response => {
+                if (!response.ok) {
                     window.scrollTo(0, 0);
+                    alert("Invalid username or password");
                     this.setState({error: true})
                 }
+                return response.json();
+            })
+            .then(loginData => {
+                this.props.authHandler(loginData.user.role, loginData.user.id, loginData.token);
+                this.setState({redirect: true});
             });
     }
 

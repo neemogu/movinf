@@ -58,7 +58,8 @@ interface FilmFormState {
 }
 
 interface FilmFormProps {
-    id: string|null
+    id: string|null,
+    authToken: string
 }
 
 function containsPerson(person: FilmPerson, persons: Id[]) : boolean {
@@ -226,9 +227,10 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
     submitForm() {
         let preparedFilm = prepareFilm(JSON.parse(JSON.stringify(this.state.film)));
         console.log(preparedFilm);
-        const requestOptions = {
+        const requestOptions: RequestInit = {
             method: preparedFilm.id === null ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken },
+            mode: 'cors',
             body: JSON.stringify(preparedFilm)
         };
         fetch(backLink + '/films', requestOptions)
@@ -247,8 +249,10 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
     }
 
     deleteItem() {
-        const requestOptions = {
-            method: 'DELETE'
+        let requestOptions: RequestInit = {
+            method: 'DELETE',
+            headers: { "Authorization": "Bearer " + this.props.authToken},
+            mode: 'cors'
         };
         fetch(backLink + '/films/' + this.state.film.id, requestOptions)
             .then(response => response.json());
@@ -829,12 +833,14 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
     }
 }
 
-function FilmFormRouteWrapper() {
+function FilmFormRouteWrapper(props: {authToken: string|null}) {
     let {id} = useParams();
     let filmId = id === undefined ? null : id;
-    console.log(filmId);
+    if (props.authToken === null) {
+        return (<Redirect to="/"/>);
+    }
     return (
-        <FilmForm id={filmId}/>
+        <FilmForm authToken={props.authToken} id={filmId}/>
     );
 }
 

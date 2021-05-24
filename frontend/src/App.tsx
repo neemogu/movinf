@@ -23,23 +23,47 @@ import UserRouteWrapper from "./components/users/User";
 import FilterableUserList from "./components/users/FilterableUserList";
 import UserFormRouteWrapper from "./components/users/UserForm";
 import LoginForm from "./components/users/LoginForm";
-
-import {backLink} from "./components/Utility";
+import {Button} from "@material-ui/core";
 
 function App() {
-    const [isLogged, setIsLogged] = useState<boolean>(false);
-    const [role, setRole] = useState<string|null>(null);
-    const [user, setUser] = useState<string|null>(null);
-    const [authToken, setAuthToken] = useState<string|null>(null);
+    const [isLogged, setIsLogged] = useState<boolean>(Boolean(sessionStorage.getItem("isLogged") || false));
+    const [role, setRole] = useState<string|null>(sessionStorage.getItem("role"));
+    const [user, setUser] = useState<string|null>(sessionStorage.getItem("user"));
+    const [authToken, setAuthToken] = useState<string|null>(sessionStorage.getItem("authToken"));
 
-    function Logout() {
+    React.useEffect(() => {
+        sessionStorage.setItem("isLogged", String(isLogged));
+    }, [isLogged])
+
+    React.useEffect(() => {
+        if (user) {
+            sessionStorage.setItem("user", user);
+        } else {
+            sessionStorage.removeItem("user");
+        }
+    }, [user])
+
+    React.useEffect(() => {
+        if (role) {
+            sessionStorage.setItem("role", role);
+        } else {
+            sessionStorage.removeItem("role");
+        }
+    }, [role])
+
+    React.useEffect(() => {
+        if (authToken) {
+            sessionStorage.setItem("authToken", authToken);
+        } else {
+            sessionStorage.removeItem("authToken");
+        }
+    }, [authToken]);
+
+    function logout() {
         setIsLogged(false);
         setRole(null);
         setUser(null);
         setAuthToken(null);
-        return (
-            <Redirect to="/" />
-        );
     }
 
     function login(role: string, user: string, authToken: string): void {
@@ -56,64 +80,93 @@ function App() {
                     <nav>
                         <ul className="navigation">
                             <li>
-                                <Link to="/">
-                                    Home
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/">
+                                        Home
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/films">
-                                    Films
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/films">
+                                        Films
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/persons">
-                                    Persons
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/persons">
+                                        Persons
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/users">
-                                    Users
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/users">
+                                        Users
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/categories">
-                                    Categories
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/categories">
+                                        Categories
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/countries">
-                                    Countries
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/countries">
+                                        Countries
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/studios">
-                                    Studios
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/studios">
+                                        Studios
+                                    </Link>
+                                </Button>
                             </li>
                             <li>
-                                <Link to="/languages">
-                                    Languages
-                                </Link>
+                                <Button size="small">
+                                    <Link to="/languages">
+                                        Languages
+                                    </Link>
+                                </Button>
                             </li>
                             {!isLogged ? (
                                 <li className="login-register-nav">
-                                    <Link to="/login">
-                                        Login
-                                    </Link>
+                                    <Button size="small">
+                                        <Link to="/login">
+                                            Login
+                                        </Link>
+                                    </Button>
                                 </li>
                             ) : ""}
                             {!isLogged ? (
                                 <li className="login-register-nav">
-                                    <Link to="/register">
-                                        Register
-                                    </Link>
+                                    <Button size="small">
+                                        <Link to="/register">
+                                            Register
+                                        </Link>
+                                    </Button>
                                 </li>
                             ) : ""}
                             {isLogged ? (
                                 <li className="login-register-nav">
-                                    <Link to="/logout">
+                                    <Button size="small" onClick={logout}>
                                         Logout
-                                    </Link>
+                                    </Button>
+                                </li>
+                            ) : ""}
+                            {isLogged && role !== "ADMIN" ? (
+                                <li className="login-register-nav">
+                                    <Button size="small">
+                                        <Link to={"/users/" + user}>
+                                            Profile
+                                        </Link>
+                                    </Button>
                                 </li>
                             ) : ""}
                         </ul>
@@ -129,14 +182,14 @@ function App() {
                         </Route>
                         <Route path="/films/new">
                             {role === "ADMIN" ? (
-                                <FilmFormRouteWrapper/>
+                                <FilmFormRouteWrapper authToken={authToken}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/films/edit/:id">
                             {role === "ADMIN" ? (
-                                <FilmFormRouteWrapper/>
+                                <FilmFormRouteWrapper authToken={authToken}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -149,14 +202,14 @@ function App() {
                         </Route>
                         <Route path="/persons/new">
                             {role === "ADMIN" ? (
-                                <PersonFormRouteWrapper/>
+                                <PersonFormRouteWrapper authToken={authToken}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/persons/edit/:id">
                             {role === "ADMIN" ? (
-                                <PersonFormRouteWrapper/>
+                                <PersonFormRouteWrapper authToken={authToken}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -169,14 +222,14 @@ function App() {
                         </Route>
                         <Route path="/countries/new">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/countries"/>
+                                <FormRouteWrapper authToken={authToken} link="/countries"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/countries/edit/:id">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/countries"/>
+                                <FormRouteWrapper authToken={authToken} link="/countries"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -189,14 +242,14 @@ function App() {
                         </Route>
                         <Route path="/categories/new">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/categories"/>
+                                <FormRouteWrapper authToken={authToken} link="/categories"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/categories/edit/:id">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/categories"/>
+                                <FormRouteWrapper authToken={authToken} link="/categories"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -209,14 +262,14 @@ function App() {
                         </Route>
                         <Route path="/studios/new">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/studios"/>
+                                <FormRouteWrapper authToken={authToken} link="/studios"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/studios/edit/:id">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/studios"/>
+                                <FormRouteWrapper authToken={authToken} link="/studios"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -229,14 +282,14 @@ function App() {
                         </Route>
                         <Route path="/languages/new">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/languages"/>
+                                <FormRouteWrapper authToken={authToken} link="/languages"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/languages/edit/:id">
                             {role === "ADMIN" ? (
-                                <FormRouteWrapper link="/languages"/>
+                                <FormRouteWrapper authToken={authToken} link="/languages"/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -250,14 +303,14 @@ function App() {
                         </Route>
                         <Route path="/reviews/film/add/:id">
                             {isLogged ? (
-                                <ReviewFormRouteWrapper currentUserId={user}/>
+                                <ReviewFormRouteWrapper authToken={authToken} currentUserId={user}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
                         </Route>
                         <Route path="/reviews/film/edit/:id">
                             {isLogged || role === "ADMIN" ? (
-                                <ReviewFormRouteWrapper currentUserId={user}/>
+                                <ReviewFormRouteWrapper authToken={authToken} currentUserId={user}/>
                             ) : (
                                 <Redirect to="/"/>
                             )}
@@ -270,7 +323,7 @@ function App() {
                             <FilterableUserList canEditOrAdd={role === "ADMIN"}/>
                         </Route>
                         <Route path="/users/edit/:id">
-                            <UserFormRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
+                            <UserFormRouteWrapper authToken={authToken} currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
                         <Route path="/users/:id">
                             <UserRouteWrapper canEdit={role === "ADMIN"} currentUserId={user}/>
@@ -279,10 +332,7 @@ function App() {
                             <LoginForm authHandler={login}/>
                         </Route>
                         <Route path="/register">
-                            <UserFormRouteWrapper currentUserId={user} canEdit={role === "ADMIN"}/>
-                        </Route>
-                        <Route path="/logout">
-                            <Logout/>
+                            <UserFormRouteWrapper authToken={authToken} currentUserId={user} canEdit={role === "ADMIN"}/>
                         </Route>
                     </Switch>
                 </div>

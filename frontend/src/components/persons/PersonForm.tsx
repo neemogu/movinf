@@ -34,7 +34,8 @@ interface PersonFormState {
 }
 
 interface PersonFormProps {
-    id: string|null
+    id: string|null,
+    authToken: string
 }
 
 function preparePerson(person: PersonFormPersonData) : PersonFormPersonData {
@@ -94,9 +95,10 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
 
     submitForm() {
         let preparedPerson = preparePerson(JSON.parse(JSON.stringify(this.state.person)));
-        const requestOptions = {
+        const requestOptions: RequestInit = {
             method: preparedPerson.id === null ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken},
+            mode: 'cors',
             body: JSON.stringify(preparedPerson)
         };
         fetch(backLink + '/persons', requestOptions)
@@ -114,8 +116,10 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
     }
 
     deleteItem() {
-        const requestOptions = {
-            method: 'DELETE'
+        const requestOptions: RequestInit = {
+            method: 'DELETE',
+            headers: {'Authorization': 'Bearer ' + this.props.authToken},
+            mode: 'cors',
         };
         fetch(backLink + '/persons/' + this.state.person.id, requestOptions)
             .then(response => response.json());
@@ -233,11 +237,14 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
     }
 }
 
-function PersonFormRouteWrapper() {
+function PersonFormRouteWrapper(props: {authToken: string|null}) {
     let {id} = useParams();
     let personId = id === undefined ? null : id;
+    if (props.authToken === null) {
+        return (<Redirect to="/"/>)
+    }
     return (
-        <PersonForm id={personId}/>
+        <PersonForm authToken={props.authToken} id={personId}/>
     );
 }
 

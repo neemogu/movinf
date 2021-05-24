@@ -23,7 +23,6 @@ public class HomeController {
         links.put("profiles", "/users");
         links.put("login", "/auth/login");
         links.put("register", "/auth/register");
-        links.put("logout", "/user/logout");
         links.put("currentUser", "/user/current");
         Map<String, Map<String, String>> result = new HashMap<>();
         result.put("links", links);
