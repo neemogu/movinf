@@ -2,7 +2,7 @@ version: "3"
 services:
   frontend:
     image: neemogu/movinf-frontend:latest
-    container_name: movinf-frontend
+    container_name: frontend
     ports:
       - '80:80'
   postgres:
@@ -10,12 +10,12 @@ services:
     network_mode: bridge
     container_name: postgres
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - init.sql:/docker-entrypoint-initdb.d/init.sql
+      - 'postgres-data:/var/lib/postgresql/data'
+      - 'init.sql:/docker-entrypoint-initdb.d/init.sql'
     expose:
       - 5432
     ports:
-      - 5432:5432
+      - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=*****
       - POSTGRES_USER=postgres
@@ -28,7 +28,7 @@ services:
     expose:
       - 8080
     ports:
-      - 8080:8080
+      - '8080:8080'
     restart: unless-stopped
     depends_on:
       - postgres
