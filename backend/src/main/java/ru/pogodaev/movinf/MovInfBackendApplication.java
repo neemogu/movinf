@@ -19,7 +19,7 @@ public class MovInfBackendApplication {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:80")
+                        .allowedOrigins("http://35.239.66.122:80")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
             }

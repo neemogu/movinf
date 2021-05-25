@@ -8,4 +8,4 @@ export function strOrGap(str: string | null): string {
     return str !== null ? str : "-";
 }
 
-export const backLink = 'http://localhost:8080';
+export const backLink = 'http://35.239.66.122:8080';
