@@ -20,5 +20,5 @@ INSERT INTO users (username, password, role, email, registration_date, gender) V
                                                                                'USER', 'user6@gmail.com', current_date, 0) ON CONFLICT DO NOTHING;
 
 INSERT INTO users (username, password, firstname, lastname, birthdate, gender, role, email, registration_date)
-VALUES ('user7', '$2y$12$OWd/BZgEPQWaR1WvbuDSb.wRcNGokB4EFzyrMd6vOUyirigbe.pU6', 'Nikita', 'Pogodaev', date '18-01-2001',
+VALUES ('user7', '$2y$12$OWd/BZgEPQWaR1WvbuDSb.wRcNGokB4EFzyrMd6vOUyirigbe.pU6', 'Nikita', 'Pogodaev', '2001-01-18',
         0, 'USER', 'user7@gmail.com', current_date) ON CONFLICT DO NOTHING;

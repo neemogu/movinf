@@ -1,5 +1,2 @@
-CREATE DATABASE movinf OWNER postgres;
-CREATE USER guest WITH PASSWORD '123';
-GRANT ALL PRIVILEGES ON movinf TO guest;
-\connect movinf;
+ALTER USER movinf PASSWORD '8ckh9vd2';
 CREATE SCHEMA "movinf-schema";

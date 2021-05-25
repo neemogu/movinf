@@ -17,10 +17,10 @@
 
     <properties>
         <java.version>11</java.version>
-        <flyway.user>guest</flyway.user>
-        <flyway.password>123</flyway.password>
+        <flyway.user>movinf</flyway.user>
+        <flyway.password>8ckh9vd2</flyway.password>
         <flyway.schemas>movinf_schema</flyway.schemas>
-        <flyway.url>jdbc:postgresql://localhost:5432/movinf</flyway.url>
+        <flyway.url>jdbc:postgresql://db:5432/movinf</flyway.url>
         <flyway.locations>/db/migration</flyway.locations>
     </properties>
 
