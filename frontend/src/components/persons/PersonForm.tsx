@@ -103,7 +103,8 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
         this.setState({isLoaded: true});
     }
 
-    submitForm() {
+    submitForm(event: any) {
+        event.preventDefault();
         let preparedPerson = preparePerson(JSON.parse(JSON.stringify(this.state.person)));
         const requestOptions: RequestInit = {
             method: preparedPerson.id === null ? 'POST' : 'PUT',
@@ -125,7 +126,8 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
             });
     }
 
-    deleteItem() {
+    deleteItem(event: any) {
+        event.preventDefault();
         const requestOptions: RequestInit = {
             method: 'DELETE',
             headers: {'Authorization': 'Bearer ' + this.props.authToken},

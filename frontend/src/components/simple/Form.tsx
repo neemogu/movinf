@@ -87,7 +87,8 @@ class Form extends React.Component<FormProps, FormState>{
         }
     }
 
-    submitForm() {
+    submitForm(event: any) {
+        event.preventDefault();
         const requestOptions: RequestInit = {
             method: this.state.data.id === null ? 'POST' : 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.authToken },
@@ -113,7 +114,8 @@ class Form extends React.Component<FormProps, FormState>{
             });
     }
 
-    deleteItem() {
+    deleteItem(event: any) {
+        event.preventDefault();
         const requestOptions : RequestInit = {
             method: 'DELETE',
             headers: {'Authorization': 'Bearer ' + this.props.authToken},
