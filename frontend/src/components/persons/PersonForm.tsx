@@ -95,12 +95,15 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
                         country: data.country !== null ? data.country: {id: "0"}
                     }}))
         }
+        this.setState({isLoaded: true});
+    }
+
+    componentDidUpdate(prevProps: Readonly<PersonFormProps>, prevState: Readonly<PersonFormState>, snapshot?: any) {
         const prevData = sessionStorage.getItem("personFormData");
         if (prevData !== null) {
-            this.setState({person: JSON.parse(prevData)})
+            this.setState(JSON.parse(prevData))
             sessionStorage.removeItem("personFormData");
         }
-        this.setState({isLoaded: true});
     }
 
     submitForm(event: any) {
@@ -139,7 +142,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
     }
 
     saveState() {
-        sessionStorage.setItem("personFormData", JSON.stringify(this.state.person));
+        sessionStorage.setItem("personFormData", JSON.stringify(this.state));
     }
 
     handleCountryChange(event: any) {
@@ -161,6 +164,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormState>{
     render() {
         if (this.state.redirect) {
             if (this.props.redirected) {
+                this.setState({redirect: false})
                 this.props.history.goBack();
             } else {
                 return (<Redirect to="/persons"/>)

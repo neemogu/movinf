@@ -225,16 +225,19 @@ class FilmForm extends React.Component<FilmFormProps, FilmFormState>{
                         producers: data.film.producers.map(getFilmPersonFromJson),
                     }}))
         }
-        const prevData = sessionStorage.getItem("filmFormData");
-        if (prevData !== null) {
-            this.setState({film: JSON.parse(prevData)})
-            sessionStorage.removeItem("filmFormData");
-        }
         this.setState({isLoaded: true});
     }
 
+    componentDidUpdate(prevProps: Readonly<FilmFormProps>, prevState: Readonly<FilmFormState>, snapshot?: any) {
+        const prevData = sessionStorage.getItem("filmFormData");
+        if (prevData !== null) {
+            this.setState(JSON.parse(prevData))
+            sessionStorage.removeItem("filmFormData");
+        }
+    }
+
     saveState() {
-        sessionStorage.setItem("filmFormData", JSON.stringify(this.state.film));
+        sessionStorage.setItem("filmFormData", JSON.stringify(this.state));
     }
 
     submitForm() {

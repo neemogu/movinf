@@ -134,6 +134,7 @@ class Form extends React.Component<FormProps, FormState>{
     render() {
         if (this.state.redirect) {
             if (this.props.redirected) {
+                this.setState({redirect: false})
                 this.props.history.goBack();
             } else {
                 return (<Redirect to={this.props.link}/>)
