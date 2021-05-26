@@ -40,7 +40,9 @@ class List extends React.Component<ListProps, ListState>{
     }
 
     componentDidUpdate(prevProps: Readonly<ListProps>, prevState: Readonly<ListState>, snapshot?: any) {
-        this.componentDidMount();
+        if (prevProps.link !== this.props.link) {
+            this.componentDidMount();
+        }
     }
 
     render() {
