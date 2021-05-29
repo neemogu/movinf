@@ -69,8 +69,11 @@ class FilmListElement extends React.Component<FilmListElementProps> {
                     <span className={this.props.filmData.rating === null ? "film-rating" : (this.props.filmData.rating >= 6 ?
                         "film-rating-positive" : "film-rating-negative")}>
                             {this.props.filmData.rating !== null ? this.props.filmData.rating.toString().slice(0, 4) : "-"}</span>
-                    <span className="film-rating-count">{parseInt(this.props.filmData.reviewsCount) !== 0 ?
-                        "(" + this.props.filmData.reviewsCount + " reviews)" : ""}</span>
+                    <span className="film-rating-count">{
+                        this.props.filmData.reviewsCount !== undefined &&
+                        parseInt(this.props.filmData.reviewsCount) !== 0 ?
+                        "(" + this.props.filmData.reviewsCount + " reviews)" : ""}
+                    </span>
                     {this.props.canEdit ? (
                         <span className="film-edit">
                             <Button size="small">
